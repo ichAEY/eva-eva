@@ -11,6 +11,7 @@
     ru:'Ежедневно, 10:00–21:00',
     en:'Daily, 10:00–21:00'
   };
+  data.media.logo='';
   data.media.about='gallery.00000.webp';
   data.team=[1,2,3,4].map(number=>({
     id:`master-${number}`,
