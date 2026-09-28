@@ -8,15 +8,14 @@
 <meta name="description" content="EVA — салон красоты в Павлино, Балашиха. Услуги, фотографии работ, отзывы и запись по телефону.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" href="logo.webp" as="image" type="image/webp" fetchpriority="high">
 <link rel="preload" href="master.00000.webp" as="image" type="image/webp" fetchpriority="high">
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%;background:#fafaf9;color:#181818;font-family:Manrope,Arial,sans-serif}
 #brBootIntro{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;background:#fafaf9;opacity:1;transition:opacity .24s ease;pointer-events:auto}
-#brBootIntro img{display:block;width:min(50vw,220px);height:auto;max-height:38svh;object-fit:contain}
+.br-boot-wordmark{font:500 clamp(72px,20vw,132px)/.9 "Cormorant Garamond",Georgia,serif;letter-spacing:.16em;text-indent:.16em;color:#211d1a}
 html[data-br-device="desktop"] #brBootIntro{transition:opacity .40s cubic-bezier(.22,1,.36,1)}
-html[data-br-device="desktop"] #brBootIntro img{width:min(75vw,330px);max-height:48svh}
+html[data-br-device="desktop"] .br-boot-wordmark{font-size:clamp(96px,10vw,156px)}
 #brBootIntro.is-exiting{opacity:0;pointer-events:none}
 html.br-booting #salon-mobile,html.br-booting #salon-desktop-v1{visibility:hidden!important}
 #brLoadError{display:none;min-height:100svh;padding:32px;place-items:center;text-align:center}
@@ -25,7 +24,9 @@ html.br-booting #salon-mobile,html.br-booting #salon-desktop-v1{visibility:hidde
 @media(prefers-reduced-motion:reduce){#brBootIntro{transition:none!important}}
 </style>
 <link rel="stylesheet" href="desktop.css?v=salon-final-20260928-v2" media="(hover:hover) and (pointer:fine), (min-width:1024px)">
+<link rel="stylesheet" href="eva.css?v=eva-final-20260928-v1">
 <script src="site-data.js?v=salon-final-20260928-v1"></script>
+<script src="eva-data.js?v=eva-final-20260928-v1"></script>
 <script src="site-regions.js?v=salon-final-20260928-v2"></script>
 <script>
 (()=>{
@@ -47,7 +48,7 @@ html.br-booting #salon-mobile,html.br-booting #salon-desktop-v1{visibility:hidde
 </script>
 </head>
 <body>
-<div id="brBootIntro" role="status" aria-label="EVA"><img src="logo.webp" alt="EVA" width="220" height="220" decoding="sync" fetchpriority="high"></div>
+<div id="brBootIntro" role="status" aria-label="EVA"><span class="br-boot-wordmark">EVA</span></div>
 <main id="brLoadError" role="alert"><div><strong>EVA</strong><p>Не удалось загрузить страницу. Проверьте подключение к интернету.</p><a href="" onclick="location.reload();return false">Повторить</a></div></main>
 <script>window.SALON_REVIEWS=[];</script>
 <script>
@@ -56,7 +57,6 @@ html.br-booting #salon-mobile,html.br-booting #salon-desktop-v1{visibility:hidde
  const id=desktop?'salon-desktop-v1':'salon-mobile';
  const intro=document.getElementById('brBootIntro'),error=document.getElementById('brLoadError');
  const site=window.TANEM_SITE_DATA;
- if(site?.mode==='production'&&site.media?.logo){const logo=intro.querySelector('img');logo.src=site.media.logo;logo.alt=(site.salon?.name?.ru||site.salon?.name||'');}
  let closed=false,shown=false,readyTimer=0;
  function showApp(){
    const root=document.getElementById(id);
@@ -93,7 +93,13 @@ html.br-booting #salon-mobile,html.br-booting #salon-desktop-v1{visibility:hidde
  script.async=false;script.onload=()=>{
    const runtime=document.createElement('script');
    runtime.src='site-runtime.js?v=factory-20260928-v1';
-   runtime.async=false;runtime.onload=loaded;
+   runtime.async=false;runtime.onload=()=>{
+     const client=document.createElement('script');
+     client.src='eva-custom.js?v=eva-final-20260928-v1';
+     client.async=false;client.onload=loaded;
+     client.onerror=()=>{if(closed)error.classList.add('is-visible')};
+     document.body.appendChild(client);
+   };
    runtime.onerror=()=>{if(closed)error.classList.add('is-visible')};
    document.body.appendChild(runtime);
  };
