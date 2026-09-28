@@ -1,0 +1,192 @@
+/* EVA-only presentation layer. The shared salon template remains unchanged. */
+
+/* Typographic EVA wordmark. */
+#salon-desktop-v1 .std-header-brand-main{
+  display:block!important;
+  width:auto!important;
+  height:auto!important;
+  font:500 34px/.9 "Cormorant Garamond",Georgia,serif!important;
+  letter-spacing:.115em!important;
+  text-transform:uppercase!important;
+}
+#salonDesktopTop .std-logo{
+  font-size:clamp(70px,6vw,98px)!important;
+  letter-spacing:.105em!important;
+  text-indent:.105em!important;
+}
+
+/* Desktop should move continuously, without section-by-section reveal jumps. */
+html[data-br-device="desktop"],
+html[data-br-device="desktop"] body,
+#salon-desktop-v1{
+  scroll-behavior:auto!important;
+  scroll-snap-type:none!important;
+  overscroll-behavior-y:auto!important;
+}
+#salonDesktopPortfolio .std-portfolio-head,
+#salonDesktopPortfolio .std-portfolio-grid,
+#salonDesktopPortfolio .std-portfolio-more,
+#salonDesktopServices .mct-price-head,
+#salonDesktopServices .dct-services-main-title,
+#salonDesktopServices .mct-tabs-ribbon-wrap,
+#salonDesktopServices .dct-service-groups,
+#salonDesktopServices .mct-more-services,
+#salonDesktopAbout .br-about-column,
+#salonDesktopTeam.br-team-panel,
+#salonDesktopReviews .std-reviews-head,
+#salonDesktopReviews .std-reviews-viewport,
+#salonDesktopReviews .std-reviews-actions,
+#salonDesktopContacts .std-contact-inner{
+  opacity:1!important;
+  transform:none!important;
+  transition:none!important;
+}
+
+/* Service category rails stay on one line and may be scrolled horizontally. */
+#salonDesktopServices .mct-tabs-ribbon-wrap,
+#salonDesktopServices .mct-tabs-ribbon-wrap.is-compact{
+  overflow:hidden!important;
+}
+#salonDesktopServices .mct-tabs,
+#salonDesktopServices .mct-tabs.is-compact{
+  display:block!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  scrollbar-width:none!important;
+  -webkit-overflow-scrolling:touch!important;
+}
+#salonDesktopServices .mct-tabs::-webkit-scrollbar{display:none!important}
+#salonDesktopServices #stdServiceTabs,
+#salonDesktopServices .mct-tabs-ribbon-wrap.is-compact #stdServiceTabs{
+  display:flex!important;
+  grid-template-columns:none!important;
+  flex-wrap:nowrap!important;
+  width:max-content!important;
+  min-width:100%!important;
+  gap:10px!important;
+}
+#salonDesktopServices #stdServiceTabs .mct-tab,
+#salonDesktopServices .mct-tabs-ribbon-wrap.is-compact #stdServiceTabs .mct-tab{
+  flex:1 0 max-content!important;
+  min-width:145px!important;
+  width:auto!important;
+  white-space:nowrap!important;
+}
+#salonDesktopServices .dct-service-card-title{
+  overflow-wrap:normal!important;
+  word-break:normal!important;
+  hyphens:none!important;
+}
+
+/* Gallery tabs use the same predictable single-line rail. */
+#stdGalleryBrowser .std-gallery-browser-tabs{
+  display:flex!important;
+  flex-wrap:nowrap!important;
+  gap:8px!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  scrollbar-width:none!important;
+  -webkit-overflow-scrolling:touch!important;
+}
+#stdGalleryBrowser .std-gallery-browser-tabs::-webkit-scrollbar{display:none!important}
+#stdGalleryBrowser .std-gallery-browser-tabs button{
+  flex:0 0 auto!important;
+  white-space:nowrap!important;
+}
+
+/* The salon rating star has one consistent gold accent everywhere. */
+#salon-desktop-v1 .dct-about-rating-star,
+#salon-desktop-v1 .std-reviews-stars,
+#salon-desktop-v1 .std-review-stars,
+#salon-desktop-v1 .std-master-profile-rating b,
+#salon-mobile .tn42-rating-star,
+#salon-mobile .tn30-stars,
+#salon-mobile .tn30-review-stars,
+#salon-mobile .br-stars,
+#salon-mobile .br-review-meta-stars,
+#salon-mobile .tn22-salon-rating b{
+  color:#e4ad35!important;
+  -webkit-text-fill-color:#e4ad35!important;
+}
+
+@media(max-width:1023px){
+  #salon-mobile .tn22-brand{
+    display:flex!important;
+    align-items:center!important;
+    height:52px!important;
+    margin-left:0!important;
+    font:500 27px/1 "Cormorant Garamond",Georgia,serif!important;
+    letter-spacing:.10em!important;
+    text-transform:uppercase!important;
+  }
+  #salon-mobile #tn13Top .tn22-card{
+    display:flex!important;
+    flex-direction:column!important;
+    padding-bottom:max(24px,env(safe-area-inset-bottom))!important;
+  }
+  #salon-mobile #tn13Top .tn22-title{
+    font-size:54px!important;
+    letter-spacing:.18em!important;
+  }
+  #salon-mobile #tn13Top .tn22-cta{margin-top:auto!important}
+  #salon-mobile #tn13Top .tn22-worklink{margin-top:10px!important;margin-bottom:0!important}
+
+  html[data-br-device="mobile"] body #salon-mobile #tn13Services .tn31-cats,
+  html[data-br-device="mobile"] body #salon-mobile #tn13Services .tn31-cats.is-compact{
+    display:flex!important;
+    grid-template-columns:none!important;
+    flex-wrap:nowrap!important;
+    width:auto!important;
+    margin-left:0!important;
+    gap:7px!important;
+    padding:0 25px 11px!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    scroll-snap-type:x proximity!important;
+    scrollbar-width:none!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+  html[data-br-device="mobile"] body #salon-mobile #tn13Services .tn31-cats.is-compact:before,
+  html[data-br-device="mobile"] body #salon-mobile #tn13Services .tn31-cats.is-compact:after{
+    display:block!important;
+    flex:0 0 1px!important;
+    width:1px!important;
+  }
+  html[data-br-device="mobile"] body #salon-mobile #tn13Services .tn31-cats .tn31-cat,
+  html[data-br-device="mobile"] body #salon-mobile #tn13Services .tn31-cats.is-compact .tn31-cat{
+    flex:0 0 auto!important;
+    width:auto!important;
+    min-width:116px!important;
+    height:40px!important;
+    padding:0 13px!important;
+    white-space:nowrap!important;
+    line-height:1!important;
+    scroll-snap-align:start!important;
+  }
+  html[data-br-device="mobile"] body #salon-mobile #tn13Services .tn31-service-name{
+    overflow-wrap:normal!important;
+    word-break:normal!important;
+    hyphens:none!important;
+  }
+
+  html[data-br-device="mobile"] body #salon-mobile #tn13Gallery .tn22-gallery-tabs{
+    display:flex!important;
+    flex-wrap:nowrap!important;
+    gap:6px!important;
+    width:100%!important;
+    padding:0 6px 5px!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    scroll-snap-type:x proximity!important;
+    scrollbar-width:none!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+  html[data-br-device="mobile"] body #salon-mobile #tn13Gallery .tn22-gallery-tabs::-webkit-scrollbar{display:none!important}
+  html[data-br-device="mobile"] body #salon-mobile #tn13Gallery .tn22-gallery-tab{
+    flex:0 0 auto!important;
+    min-width:108px!important;
+    padding:0 15px!important;
+    white-space:nowrap!important;
+    scroll-snap-align:start!important;
+  }
+}
