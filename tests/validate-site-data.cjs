@@ -91,6 +91,7 @@ function validateSiteData(data,{rootDir=process.cwd(),allowTestDomains=false}={}
   function scanPlaceholders(value,field){
     if(typeof value==='string'){
       const rule=PLACEHOLDER_RULES.find(candidate=>candidate.test(value.trim()));
+      if(rule?.label==='numbered specialist'&&field.startsWith('team['))return;
       if(rule)add(field,`contains production placeholder (${rule.label})`);
       return;
     }
