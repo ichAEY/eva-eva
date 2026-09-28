@@ -41,7 +41,7 @@ assert.deepEqual(validateSiteData(starter,{rootDir:root}),[],'blank starter must
 // A client repository starts with the exact blank factory data and then moves
 // to a validated production catalog. Only the factory preview has four demos.
 if(data.mode==='template'){
-  assert.deepEqual(data,starter,'an unpublished client draft must match the blank starter');
+  assert.equal(fs.readFileSync(path.join(root,'site-data.js'),'utf8'),fs.readFileSync(path.join(root,'site-data.blank.js'),'utf8'),'an unpublished client draft must be the exact blank starter');
 }else{
   assert.equal(data.mode,'production','a populated client must explicitly enter production mode');
   assert(data.services.length>0,'production must have real services');
