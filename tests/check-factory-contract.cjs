@@ -38,27 +38,24 @@ assert.equal(starter.salon.heroDescription.ru,'Ваша красота. Ваша
 assert(starter.salon.about.ru.startsWith('В основе нашей работы — профессиональный подход'),'blank starter must preserve the approved universal About copy');
 assert.deepEqual(validateSiteData(starter,{rootDir:root}),[],'blank starter must have valid schema');
 
-// Preview-only assertions apply to the template, not a populated client site.
-if(data.mode==='template'){
-  assert.equal(data.country,'RU','the distributed template must open as a Russian salon by default');
-  assert.deepEqual([...data.locales],['ru','en'],'the distributed template must show only RU/EN by default');
-  assert.equal(data.services.length,4,'the template preview must contain exactly four neutral services');
-  assert.deepEqual([...data.categoryOrder],['Волосы','Маникюр','Брови и ресницы','Эпиляция'],'the preview must show the four approved service categories');
-  assert.deepEqual([...data.services.map(service=>service.title.en)],['Hair service','Manicure','Brows and Lashes','Hair Removal'],'demo service labels must use the approved English copy');
-  for(const service of data.services){
-    assert.equal(service.price,'',`${service.id}: demo price must be empty`);
-    assert.equal(service.duration,'',`${service.id}: demo duration must be empty`);
-    assert.equal(service.description.ru,'',`${service.id}: demo description must be empty`);
-    assert.deepEqual([...service.variants],[],`${service.id}: demo variants must be empty`);
-  }
-  
-  const unsafe=structuredClone(data);
-  unsafe.mode='production';
-  const unsafeErrors=validateSiteData(unsafe,{rootDir:root});
-  assert(unsafeErrors.some(error=>error.includes('production placeholder')),'production mode must reject demo copy');
-  assert(unsafeErrors.some(error=>error.includes('placeholder media')),'production mode must reject placeholder media');
-  assert(unsafeErrors.some(error=>error.includes('booking method')),'production mode must require a booking method');
+assert.equal(data.country,'RU','the distributed template must open as a Russian salon by default');
+assert.deepEqual([...data.locales],['ru','en'],'the distributed template must show only RU/EN by default');
+assert.equal(data.services.length,4,'the template preview must contain exactly four neutral services');
+assert.deepEqual([...data.categoryOrder],['Волосы','Маникюр','Брови и ресницы','Эпиляция'],'the preview must show the four approved service categories');
+assert.deepEqual([...data.services.map(service=>service.title.en)],['Hair service','Manicure','Brows and Lashes','Hair Removal'],'demo service labels must use the approved English copy');
+for(const service of data.services){
+  assert.equal(service.price,'',`${service.id}: demo price must be empty`);
+  assert.equal(service.duration,'',`${service.id}: demo duration must be empty`);
+  assert.equal(service.description.ru,'',`${service.id}: demo description must be empty`);
+  assert.deepEqual([...service.variants],[],`${service.id}: demo variants must be empty`);
 }
+
+const unsafe=structuredClone(data);
+unsafe.mode='production';
+const unsafeErrors=validateSiteData(unsafe,{rootDir:root});
+assert(unsafeErrors.some(error=>error.includes('production placeholder')),'production mode must reject demo copy');
+assert(unsafeErrors.some(error=>error.includes('placeholder media')),'production mode must reject placeholder media');
+assert(unsafeErrors.some(error=>error.includes('booking method')),'production mode must require a booking method');
 
 const ready=loadSiteData(path.join(root,'tests/fixtures/site-data.production.js'));
 assert.deepEqual(validateSiteData(ready,{rootDir:root,allowTestDomains:true}),[],'a complete production fixture must pass');
@@ -106,7 +103,10 @@ assert(index.includes('(hover:hover) and (pointer:fine), (min-width:1024px)'),'w
 assert(desktop.includes('SITE.services.filter'),'desktop services must come from the unified source');
 assert(desktop.includes('DESKTOP_SERVICE_TABS.length<=5'),'desktop must stretch All plus up to four real categories');
 assert(mobile.includes('SITE.services.map'),'mobile services must come from the unified source');
-assert(mobile.includes('SERVICE_CATS.length>0&&SERVICE_CATS.length<=4'),'mobile must stretch one to four real categories');
+assert(!mobile.includes('SERVICE_CATS.length>0&&SERVICE_CATS.length<=4'),'mobile must not force 1-4 categories into equal-width compact cells');
+const mobileCategoryCSS=fs.readFileSync(path.join(root,'mobile-overrides.css'),'utf8');
+assert(mobileCategoryCSS.includes('grid-template-columns:none!important')&&mobileCategoryCSS.includes('flex:0 0 auto!important')&&mobileCategoryCSS.includes('overflow-x:auto!important'),
+  'mobile service categories must use natural Esmeralda pill widths with horizontal scrolling at any count');
 assert(desktop.includes('В основе нашей работы — профессиональный подход'),'desktop About must contain the approved universal copy');
 assert(!desktop.includes("locales:['ru','en','hy']"),'desktop fallback must not expose Armenian for the default template');
 assert(!mobile.includes("locales:['ru','en','hy']"),'mobile fallback must not expose Armenian for the default template');

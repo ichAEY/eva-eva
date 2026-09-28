@@ -125,7 +125,7 @@
       </div>
 
       <div class="std-hero-photo">
-        <img id="stdHeroMedia" src="master.00000.webp" alt="Медиа салона">
+        <img id="stdHeroMedia" src="media-placeholder.svg" alt="Медиа салона">
       </div>
     </section>
 
@@ -209,7 +209,7 @@
           <div class="mct-about-card">
             <div class="mct-about-portrait-wrap">
               <figure class="mct-about-portrait">
-                <img src="master.00000.webp" alt="SALON NAME" loading="lazy">
+                <img src="media-placeholder.svg" alt="SALON NAME" loading="lazy">
                 <div class="dct-about-rating"><span class="dct-about-rating-star">★</span><strong>—</strong><span>рейтинг не указан</span></div>
               </figure>
             </div>
@@ -415,33 +415,10 @@
     revealDesktopRoot();
   }
 
-  const heroVideo=document.getElementById('stdHeroVideo');
-  if(heroVideo){
-    heroVideo.muted=true;
-    heroVideo.defaultMuted=true;
-    const tryHeroVideo=()=>{if(document.hidden)return;const p=heroVideo.play();if(p&&typeof p.catch==='function')p.catch(()=>{})};
-    if(document.documentElement.classList.contains('br-booting')){
-      try{heroVideo.pause()}catch(_){}
-      window.addEventListener('br:intro-done',tryHeroVideo,{once:true});
-    }else{
-      requestAnimationFrame(tryHeroVideo);
-    }
-    heroVideo.addEventListener('loadeddata',()=>{if(!document.documentElement.classList.contains('br-booting'))tryHeroVideo()},{once:true});
-    if('IntersectionObserver' in window){
-      const heroVideoObserver=new IntersectionObserver(entries=>{
-        const visible=!!entries[0]?.isIntersecting;
-        if(visible&&!document.hidden)tryHeroVideo();
-        else try{heroVideo.pause()}catch(_){}
-      },{threshold:.04});
-      heroVideoObserver.observe(heroVideo);
-    }
-    document.addEventListener('visibilitychange',()=>{if(document.hidden){try{heroVideo.pause()}catch(_){}}else if(heroVideo.getBoundingClientRect().bottom>0)tryHeroVideo()});
-  }
-
   const bookBtn=document.getElementById('stdBookBtn');
   const bookOverlay=document.getElementById('stdBookOverlay');
   const openDesktopBooking=()=>{bookOverlay.classList.add('open');document.body.style.overflow='hidden'};
-  const closeDesktopBooking=()=>{bookOverlay.classList.remove('open');if(!document.querySelector('.std-gallery.open,.std-gallery-browser.open,.std-price-viewer.open'))document.body.style.overflow=''};
+  const closeDesktopBooking=()=>{bookOverlay.classList.remove('open');if(!document.querySelector('.std-gallery.open,.std-gallery-browser.open'))document.body.style.overflow=''};
   bookBtn.addEventListener('click',openDesktopBooking);
   const headerBookBtn=document.getElementById('stdHeaderBookBtn');
   if(headerBookBtn)headerBookBtn.addEventListener('click',openDesktopBooking);
@@ -574,7 +551,6 @@
   });
   document.getElementById('stdOpenGallery').addEventListener('click',()=>openDesktopGalleryBrowser('Ногти'));
   document.getElementById('stdStickyGalleryOpen')?.addEventListener('click',()=>openDesktopGalleryBrowser('Ногти'));
-  if(heroVideo)heroVideo.addEventListener('click',()=>openDesktopGalleryBrowser('Ногти'));
   document.getElementById('stdViewWorks')?.addEventListener('click',e=>{e.preventDefault();openDesktopGalleryBrowser('Ногти')});
   document.getElementById('stdGalleryBrowserBack').addEventListener('click',closeDesktopGalleryBrowser);
   document.getElementById('stdGalleryClose').addEventListener('click',closeDesktopViewer);

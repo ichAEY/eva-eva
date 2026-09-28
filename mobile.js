@@ -25,7 +25,6 @@
     <footer class="tn13-footer"><div class="tn13-shell"><strong>SALON NAME</strong>Цифровой офис TANEM.RU</div></footer>
     <div class="tn13-sticky" id="tn13Sticky"></div>
     <div class="tn13-overlay" id="tn13Gallery"></div>
-    <div class="tn13-sheet" id="tn13MasterSheet"><div class="tn13-panel"><button class="tn13-close" id="tn13MasterClose" type="button">×</button><div id="tn13MasterBody"></div></div></div>
     <div class="tn13-sheet" id="tn13BookSheet" role="dialog" aria-modal="true" aria-labelledby="tn50BookTitle"><div class="tn13-panel"><button class="tn13-close" id="tn13BookClose" type="button" aria-label="Закрыть">×</button><p class="tn13-kicker">Запись</p><h2 class="tn50-book-title" id="tn50BookTitle">Как вам удобнее записаться?</h2><p class="tn50-book-copy">Выберите удобный способ связи.</p><div class="tn50-book-options"><a class="tn50-book-option" href="#tn13Visit" aria-disabled="true"><span class="tn50-book-icon phone"><svg aria-hidden="true"><use href="#stl-icon-phone"/></svg></span><span><strong>Телефон будет добавлен</strong></span><span class="tn50-book-arrow">→</span></a><a class="tn50-book-option" href="#tn13Visit" aria-disabled="true"><span class="tn50-book-icon viber-generic"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5.5h14v10H9l-4 3v-13Z"/></svg></span><span><strong>Мессенджер будет добавлен</strong></span><span class="tn50-book-arrow">→</span></a></div></div></div>
   `;
   document.body.appendChild(root);
@@ -114,7 +113,7 @@ const finishHeroGesture=e=>{if(heroPointer===null)return;const dx=e.clientX-hero
 heroMedia.addEventListener('pointerup',finishHeroGesture);heroMedia.addEventListener('pointercancel',()=>{heroPointer=null;heroMoved=false});
 
 // VIEWER
-const viewer=document.createElement('div');viewer.className='tn22-viewer';viewer.innerHTML=`<div class="tn22-viewer-frame"><div class="tn23-viewer-hint">Разведите двумя пальцами, чтобы увеличить</div><div class="tn22-viewer-top"><div class="tn22-viewer-actions"><button class="tn22-vbtn tn22-view-close" type="button" aria-label="Закрыть">×</button></div></div><div class="tn42-viewer-canvas"><img class="tn22-viewer-img" alt=""></div><button class="tn22-navbtn tn22-prev" type="button">‹</button><button class="tn22-navbtn tn22-next" type="button">›</button><div class="tn23-viewer-foot"><span class="tn23-viewer-label">Фото SALON NAME</span><span class="tn22-viewer-count">01 / 01</span></div><button class="tn22-view-gallery" type="button">Открыть галерею</button></div>`;root.appendChild(viewer);
+const viewer=document.createElement('div');viewer.className='tn22-viewer';viewer.innerHTML=`<div class="tn22-viewer-frame"><div class="tn23-viewer-hint">Разведите двумя пальцами, чтобы увеличить</div><div class="tn22-viewer-top"><div class="tn22-viewer-actions"><button class="tn22-vbtn tn22-view-close" type="button" aria-label="Закрыть">×</button></div></div><div class="tn42-viewer-canvas"><img class="tn22-viewer-img" alt=""></div><button class="tn22-navbtn tn22-prev" type="button">‹</button><button class="tn22-navbtn tn22-next" type="button">›</button><div class="tn23-viewer-foot"><button class="tn22-view-gallery" type="button">Открыть галерею</button><span class="tn22-viewer-count">01 / 01</span></div></div>`;root.appendChild(viewer);
 let viewerItems=[],viewerIndex=0; const vCanvas=viewer.querySelector('.tn42-viewer-canvas'),vImg=viewer.querySelector('.tn22-viewer-img'),vCount=viewer.querySelector('.tn22-viewer-count'),vPrev=viewer.querySelector('.tn22-prev'),vNext=viewer.querySelector('.tn22-next');
 let sx=0,sy=0,viewerScale=1,viewerX=0,viewerY=0,pinchStart=0,pinchBaseScale=1,panStartX=0,panStartY=0,gestureHadPinch=false;
 const pinchDist=e=>Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
@@ -157,9 +156,6 @@ const SERVICE_CATS=SITE.categoryOrder.filter(c=>SERVICES.some(s=>s.cat===c));
 let serviceCat=SERVICE_CATS[0]||'',servicesExpanded=false;
 serv.innerHTML=`<div class="tn31-services"><p class="tn22-kicker">Услуги</p><h2>Наши услуги</h2><div class="tn31-cats-wrap"><div class="tn31-cats"></div></div><div class="tn31-service-list"></div><button class="tn31-service-more" type="button"><span class="tn31-more-text"></span><span aria-hidden="true">↓</span></button></div>`;
 const scats=serv.querySelector('.tn31-cats'),slist=serv.querySelector('.tn31-service-list'),sMore=serv.querySelector('.tn31-service-more');
-const compactServiceCategories=SERVICE_CATS.length>0&&SERVICE_CATS.length<=4;
-scats.classList.toggle('is-compact',compactServiceCategories);
-scats.style.setProperty('--mobile-service-category-count',String(Math.max(1,SERVICE_CATS.length)));
 function splitServiceTitle(raw){const parts=String(raw).split(' — ');const main=parts.shift()||raw;let detail=parts.join(' — ');if(!detail&&main.length>48){const m=main.match(/^(.*?)(\s\([^)]{5,}\)|\sBrazilian Blowout)$/i);if(m)return {main:m[1],detail:m[2].trim()}}return {main,detail}}
 function serviceDurationValue(raw){const m=String(raw||'').match(/\d+(?:[.,]\d+)?/);return m?m[0]:''}
 function mobileServiceLang(){const raw=(document.body.dataset.brLang||document.documentElement.lang||(navigator.languages&&navigator.languages[0])||navigator.language||'en').toLowerCase();return raw.startsWith('ru')?'ru':raw.startsWith('hy')?'hy':'en'}
@@ -307,7 +303,7 @@ function status(){const el=visit.querySelector('#tn22Status'),txt=el&&el.querySe
 // STICKY
 const sticky=$('#tn13Sticky');if(sticky){sticky.innerHTML=`<strong>Доступно ${SERVICES.length} ${serviceWord(SERVICES.length)}</strong><button type="button">Записаться</button>`;sticky.querySelector('button').onclick=book}
 
-const oldMaster=$('#tn13MasterSheet');if(oldMaster)oldMaster.style.display='none';document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(viewer.classList.contains('open'))closeViewer();else if(masterPage.classList.contains('open'))closeMaster();else if(teamSheet.classList.contains('open'))teamSheet.classList.remove('open');else if(gallery.classList.contains('open'))closeGallery()});
+document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;if(viewer.classList.contains('open'))closeViewer();else if(masterPage.classList.contains('open'))closeMaster();else if(teamSheet.classList.contains('open'))teamSheet.classList.remove('open');else if(gallery.classList.contains('open'))closeGallery()});
 })();
 
 (function(){
@@ -320,7 +316,7 @@ if(!services)return;
 
 const about=document.createElement('section');
 about.id='tn38About';
-about.innerHTML=`<div class="tn42-about"><p class="tn42-kicker">О нас</p><div class="tn42-card"><div class="tn42-photo"><img src="master.00000.webp" alt="SALON NAME" loading="lazy"><div class="tn42-rating"><span class="tn42-rating-star">★</span><strong>—</strong><span>рейтинг не указан</span></div></div><div class="tn42-body"><p class="tn42-lead">SALON NAME — салон красоты.</p><p class="tn42-copy">В основе нашей работы — профессиональный подход, внимание к деталям и уважение к индивидуальности каждого гостя. Мы создаём комфортное пространство, где качество и забота остаются главным приоритетом.</p><div class="tn42-facts"><div class="tn42-fact">Мастера разных направлений</div><div class="tn42-fact">Комфортная атмосфера</div><div class="tn42-fact">Индивидуальный подход</div></div></div></div></div>`;
+about.innerHTML=`<div class="tn42-about"><p class="tn42-kicker">О нас</p><div class="tn42-card"><div class="tn42-photo"><img src="media-placeholder.svg" alt="SALON NAME" loading="lazy"><div class="tn42-rating"><span class="tn42-rating-star">★</span><strong>—</strong><span>рейтинг не указан</span></div></div><div class="tn42-body"><p class="tn42-lead">SALON NAME — салон красоты.</p><p class="tn42-copy">В основе нашей работы — профессиональный подход, внимание к деталям и уважение к индивидуальности каждого гостя. Мы создаём комфортное пространство, где качество и забота остаются главным приоритетом.</p><div class="tn42-facts"><div class="tn42-fact">Мастера разных направлений</div><div class="tn42-fact">Комфортная атмосфера</div><div class="tn42-fact">Индивидуальный подход</div></div></div></div></div>`;
 services.insertAdjacentElement('afterend',about);
 })();
 
@@ -603,7 +599,7 @@ services.insertAdjacentElement('afterend',about);
 
   function syncPageLock(root){
     if(!root) return;
-    const active=!!root.querySelector('#tn13BookSheet.open,#tn13Gallery.open,#tn13Gallery.closing,#tn13MasterSheet.open,.tn22-master-page.open,.tn22-master-page.closing,.tn22-viewer.open');
+    const active=!!root.querySelector('#tn13BookSheet.open,#tn13Gallery.open,#tn13Gallery.closing,.tn22-master-page.open,.tn22-master-page.closing,.tn22-viewer.open');
     setPageLock(active);
   }
 
@@ -639,8 +635,8 @@ services.insertAdjacentElement('afterend',about);
   'use strict';
   if(window.__BR_DESKTOP_DEVICE__===true) return;
 
-  const BRAND_SRC='logo.webp';
-  const ABOUT_SRC='master.00000.webp';
+  const BRAND_SRC='logo-placeholder.svg';
+  const ABOUT_SRC='media-placeholder.svg';
   const VIDEO_SRC='';
 
   
@@ -660,7 +656,7 @@ services.insertAdjacentElement('afterend',about);
     media.dataset.brVideoReady='1';
     media.classList.add('br-video-media');
     media.setAttribute('aria-label','Видео SALON NAME');
-    media.innerHTML=VIDEO_SRC?'<video class="br-hero-video" muted autoplay loop playsinline webkit-playsinline preload="metadata" poster="master.00000.webp" src="'+VIDEO_SRC+'"></video>':'<img class="br-hero-video" src="master.00000.webp" alt="Фото салона">';
+    media.innerHTML=VIDEO_SRC?'<video class="br-hero-video" muted autoplay loop playsinline webkit-playsinline preload="metadata" poster="media-placeholder.svg" src="'+VIDEO_SRC+'"></video>':'<img class="br-hero-video" src="media-placeholder.svg" alt="Фото салона">';
     const video=media.querySelector('video');
     if(video){
       video.muted=true;
@@ -1156,4 +1152,4 @@ services.insertAdjacentElement('afterend',about);
 })();
 
 /* salon-template-cold-neutral-20260924 */
-(function(){if(document.getElementById('salon-template-cold-neutral-20260924'))return;const lateCss=document.createElement('link');lateCss.id='salon-template-cold-neutral-20260924';lateCss.rel='stylesheet';lateCss.href='mobile-overrides.css?v=salon-final-20260928-v4';document.head.appendChild(lateCss);})();
+(function(){if(document.getElementById('salon-template-cold-neutral-20260924'))return;const lateCss=document.createElement('link');lateCss.id='salon-template-cold-neutral-20260924';lateCss.rel='stylesheet';lateCss.href='mobile-overrides.css?v=safe-clean-20260929-v1';document.head.appendChild(lateCss);const paletteCss=document.createElement('link');paletteCss.id='tanem-salon-palette-v2';paletteCss.rel='stylesheet';paletteCss.href='salon-palette.css?v=safe-clean-20260929-v1';document.head.appendChild(paletteCss);})();

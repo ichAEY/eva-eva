@@ -21,7 +21,7 @@ body[data-br-lang="en"] #salon-mobile .tn22-navpop a{min-height:44px!important;h
 #tn13Services,#tn13Team,#tn13Visit{background:var(--salon-template-dark)!important;color:#f7f7f6!important;border-color:rgba(255,255,255,.08)!important}
 #tn13Services .tn31-cat.active{background:#f3f3f1!important;border-color:#f3f3f1!important;color:#181818!important}
 #tn13Services .tn31-service-name,#tn13Services .tn31-service-price,#tn13Services h2,#tn13Team h2,#tn13Visit h2{color:#f7f7f6!important}
-#tn13Services .tn31-service-detail,#tn13Services .tn31-service-book,#tn13Services .tn22-kicker,#tn13Team .tn22-kicker,#tn13Visit .tn22-kicker{color:#bdbdbb!important}
+#tn13Services .tn31-service-detail,#tn13Services .tn22-kicker,#tn13Team .tn22-kicker,#tn13Visit .tn22-kicker{color:#bdbdbb!important}
 #tn13Services .tn31-service-list,#tn13Services .tn31-service-row{border-color:rgba(255,255,255,.14)!important}
 #tn13Team .tn22-master-circle{background:linear-gradient(145deg,#3a3a3a,#202020)!important;color:#e5e5e5!important;border-color:rgba(255,255,255,.10)!important}
 #tn13Reviews{background:var(--salon-template-soft)!important;color:var(--salon-template-ink)!important}
@@ -44,7 +44,6 @@ body[data-br-lang="en"] #salon-mobile .tn22-navpop a{min-height:44px!important;h
 #salon-mobile #tn13Reviews .br-review-card{background:rgba(255,255,255,.34)!important;border-color:rgba(66,55,49,.15)!important}
 #salon-mobile #tn13Reviews .br-review-card p{color:#393939!important}
 #salon-mobile #tn13Reviews .br-review-avatar{background:#d7cec6!important;color:#514943!important;border-color:rgba(66,55,49,.10)!important}
-#salon-mobile #tn13Reviews .br-review-date{display:block;margin-top:4px;color:#737373;font:500 10px/1.2 Manrope,Arial,sans-serif}
 #salon-mobile #tn13Services .tn31-service-row:active{transform:translateY(1px)}
 #salon-mobile #tn13Services .tn31-service-name{font:500 16.5px/1.15 'Cormorant Garamond',Georgia,serif!important}
 #salon-mobile #tn13Services .tn31-service-detail{color:#bdbdbd!important;font:400 9px/1.3 Manrope,Arial,sans-serif!important}
@@ -286,8 +285,7 @@ html{background:linear-gradient(to bottom,#fafaf9 0%,#fafaf9 58%,#181818 100%)!i
  }
 }
 @media(max-width:370px){
- #salon-mobile #tn13Services .tn31-service-row,
- #salon-mobile #tn13Services .tn31-service-row.tn31-service-demo{
+ #salon-mobile #tn13Services .tn31-service-row,#salon-mobile #tn13Services .tn31-service-row.tn31-service-demo{
   grid-template-columns:minmax(0,1fr) 144px!important;
   column-gap:6px!important;padding-left:10px!important;padding-right:10px!important
  }
@@ -298,27 +296,26 @@ html{background:linear-gradient(to bottom,#fafaf9 0%,#fafaf9 58%,#181818 100%)!i
  #salon-mobile #tn13Services .tn31-service-demo .tn31-service-side{right:10px!important}
 }
 
-/* One to four categories fill the complete mobile rail evenly. */
+/* Mobile service categories: copy the independent, horizontally scrollable
+   pills from Beauty Room by Esmeralda (35px high, 15px side padding, 8px gap,
+   Manrope 12.705px, 21% above Esmeralda base). No forced grid or compression for 1-4 categories. */
 @media(max-width:1023px){
- #salon-mobile #tn13Services .tn31-cats.is-compact{
-  display:grid!important;
-  grid-template-columns:repeat(var(--mobile-service-category-count,1),minmax(0,1fr))!important;
-  gap:6px!important;width:100%!important;overflow:visible!important;
-  padding-left:25px!important;padding-right:25px!important;
+ #salon-mobile #tn13Services .tn31-cats{
+  display:flex!important;align-items:center!important;justify-content:flex-start!important;
+  flex-wrap:nowrap!important;grid-template-columns:none!important;gap:8px!important;
+  overflow-x:auto!important;overflow-y:hidden!important;
+  overscroll-behavior-inline:contain!important;-webkit-overflow-scrolling:touch!important;
+  scrollbar-width:none!important;touch-action:pan-x!important;
  }
- #salon-mobile #tn13Services .tn31-cats.is-compact:before{display:none!important}
- #salon-mobile #tn13Services .tn31-cats.is-compact .tn31-cat{
-  width:100%!important;min-width:0!important;height:42px!important;padding:0 5px!important;
-  white-space:normal!important;line-height:1.12!important;text-align:center!important;
+ #salon-mobile #tn13Services .tn31-cats::-webkit-scrollbar{display:none!important}
+ #salon-mobile #tn13Services .tn31-cat{
+  flex:0 0 auto!important;width:max-content!important;min-width:max-content!important;
+  height:35px!important;padding:0 15px!important;
+  font:500 12.705px/1 'Manrope',Arial,sans-serif!important;
+  white-space:nowrap!important;overflow-wrap:normal!important;word-break:normal!important;
+  text-align:center!important;
  }
  #salon-mobile #tn13Services .tn31-service-name{font-weight:600!important}
-}
-@media(max-width:370px){
- #salon-mobile #tn13Services .tn31-cats.is-compact{
-  margin-left:0!important;width:100%!important;padding-left:20px!important;padding-right:20px!important;
-  gap:5px!important;
- }
- #salon-mobile #tn13Services .tn31-cats.is-compact .tn31-cat{font-size:9.5px!important;padding-inline:3px!important}
 }
 
 
@@ -349,9 +346,7 @@ html{background:linear-gradient(to bottom,#fafaf9 0%,#fafaf9 58%,#181818 100%)!i
     --mobile-service-price-size:clamp(12px,3.55vw,14px);
     --mobile-service-currency-inset:8px;
   }
-  #salon-mobile #tn13Services .tn31-service-price,
-  #salon-mobile #tn13Services .tn31-service-single-price,
-  #salon-mobile #tn13Services .tn31-service-range-price{
+  #salon-mobile #tn13Services .tn31-service-price,#salon-mobile #tn13Services .tn31-service-single-price,#salon-mobile #tn13Services .tn31-service-range-price{
     box-sizing:border-box!important;
     padding-right:var(--mobile-service-currency-inset)!important;
     font-size:var(--mobile-service-price-size)!important;
@@ -361,14 +356,12 @@ html{background:linear-gradient(to bottom,#fafaf9 0%,#fafaf9 58%,#181818 100%)!i
   #salon-mobile #tn13Services .tn31-service-price{
     transform:translateX(-7.56px)!important;
   }
-  #salon-mobile #tn13Services .tn31-price-low,
-  #salon-mobile #tn13Services .tn31-price-high{
+  #salon-mobile #tn13Services .tn31-price-low,#salon-mobile #tn13Services .tn31-price-high{
     width:max-content!important;
     justify-self:center!important;
     text-align:center!important;
   }
-  #salon-mobile #tn13Services .tn31-price-symbol,
-  #salon-mobile #tn13Services .tn31-money-symbol{
+  #salon-mobile #tn13Services .tn31-price-symbol,#salon-mobile #tn13Services .tn31-money-symbol{
     flex:0 0 14px!important;
     width:14px!important;
     min-width:14px!important;
