@@ -47,12 +47,37 @@ def check(browser, width, height, mobile, language):
         assert (brand_logo.first.get_attribute("alt") or "").strip() == data["salon"]["name"][language], "Desktop header logo alt is incorrect"
     else:
         must_equal(page.locator(brand), data["salon"]["name"][language], "brand")
+    is_eva = data["salon"]["name"].get("ru") == "EVA"
+    if is_eva:
+        assert page.locator(".std-header-brand-main img" if desktop else ".tn22-brand img").count() == 0, "EVA wordmark must be text, not a photo"
     if desktop and data.get("media", {}).get("heroDesktop"):
         assert page.locator("#stdHeroMedia").first.get_attribute("src") == data["media"]["heroDesktop"], "Desktop hero did not use heroDesktop"
     assert data["salon"]["name"][language] in page.title(), "Incorrect page title"
     cards = page.locator("#stdServiceList .dct-service-card" if desktop
                          else "#tn13Services .tn31-service-row")
     assert 0 < cards.count() <= len(data["services"]), "Wrong number of service cards"
+    if is_eva:
+        masters = page.locator("#stdTeamTrack .std-master" if desktop else "#tn13Team .tn22-master-card")
+        assert masters.count() == 4, "EVA must show four approved master cards"
+        messenger = page.locator("#salonDesktopContacts .std-contact-list > .std-contact-card:nth-child(3)" if desktop
+                                 else "#tn13Visit .tn22-contact-grid > .tn22-contact:nth-child(3)")
+        assert messenger.is_hidden(), "Unconfirmed messenger contact must stay hidden"
+        hero_address = page.locator("#salonDesktopTop .std-address" if desktop else ".tn37-location .tn37-info-copy")
+        assert data["salon"]["heroAddress"][language] in hero_address.inner_text(), "Short EVA hero address is missing"
+        schedule = page.locator("#stdContactHoursSub" if desktop
+                                else "#tn13Visit .tn22-contact-grid > :last-child span:last-child span")
+        must_equal(schedule, data["schedule"]["fallback"][language], "full EVA schedule")
+        about_image = page.locator("#salonDesktopAbout .mct-about-portrait img" if desktop
+                                   else "#tn38About .tn42-photo img")
+        assert about_image.get_attribute("src") == "gallery.00000.webp", "EVA About must use the first Salon photo"
+        title = page.locator("#salonDesktopTop .std-logo" if desktop else "#tn13Top .tn22-title")
+        size = float(title.evaluate("element => getComputedStyle(element).fontSize.replace('px','')"))
+        assert size >= (70 if desktop else 53), "EVA title is not large enough"
+        if not desktop:
+            category_rail = page.locator("#tn13Services .tn31-cats")
+            rail = category_rail.evaluate("element => ({scrollWidth:element.scrollWidth,clientWidth:element.clientWidth,rows:new Set([...element.querySelectorAll('button')].map(button=>button.offsetTop)).size,wrap:getComputedStyle(element).flexWrap})")
+            assert rail["rows"] == 1 and rail["wrap"] == "nowrap", "EVA service categories must stay on one line"
+            assert rail["scrollWidth"] > rail["clientWidth"], "EVA service categories must be horizontally scrollable"
     for section, entries in [
         ("#salonDesktopTeam" if desktop else "#tn13Team", data["team"]),
         ("#salonDesktopPortfolio" if desktop else "#tn13Portfolio", data["media"]["portfolio"]),
