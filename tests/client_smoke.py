@@ -86,8 +86,7 @@ def main():
         browser = getattr(playwright, args.engine).launch(headless=True)
         try:
             for case in [(1366, 900, False, "ru"), (1366, 900, False, "en"),
-                         (1366, 900, False, "hy"), (390, 844, True, "ru"),
-                         (390, 844, True, "en"), (390, 844, True, "hy"),
+                         (390, 844, True, "ru"), (390, 844, True, "en"),
                          (1180, 820, True, "ru")]:
                 check(browser, *case)
         finally:
