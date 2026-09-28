@@ -320,7 +320,7 @@ if(!services)return;
 
 const about=document.createElement('section');
 about.id='tn38About';
-about.innerHTML=`<div class="tn42-about"><p class="tn42-kicker">О нас</p><div class="tn42-card"><div class="tn42-photo"><img src="media-placeholder.svg" alt="SALON NAME" loading="lazy"><div class="tn42-rating"><span class="tn42-rating-star">★</span><strong>—</strong><span>рейтинг не указан</span></div></div><div class="tn42-body"><p class="tn42-lead">SALON NAME — салон красоты.</p><p class="tn42-copy">В основе нашей работы — профессиональный подход, внимание к деталям и уважение к индивидуальности каждого гостя. Мы создаём комфортное пространство, где качество и забота остаются главным приоритетом.</p><div class="tn42-facts"><div class="tn42-fact">Мастера разных направлений</div><div class="tn42-fact">Комфортная атмосфера</div><div class="tn42-fact">Индивидуальный подход</div></div></div></div></div>`;
+about.innerHTML=`<div class="tn42-about"><p class="tn42-kicker">О нас</p><div class="tn42-card"><div class="tn42-photo"><img src="master.00000.webp" alt="SALON NAME" loading="lazy"><div class="tn42-rating"><span class="tn42-rating-star">★</span><strong>—</strong><span>рейтинг не указан</span></div></div><div class="tn42-body"><p class="tn42-lead">SALON NAME — салон красоты.</p><p class="tn42-copy">В основе нашей работы — профессиональный подход, внимание к деталям и уважение к индивидуальности каждого гостя. Мы создаём комфортное пространство, где качество и забота остаются главным приоритетом.</p><div class="tn42-facts"><div class="tn42-fact">Мастера разных направлений</div><div class="tn42-fact">Комфортная атмосфера</div><div class="tn42-fact">Индивидуальный подход</div></div></div></div></div>`;
 services.insertAdjacentElement('afterend',about);
 })();
 
@@ -639,8 +639,8 @@ services.insertAdjacentElement('afterend',about);
   'use strict';
   if(window.__BR_DESKTOP_DEVICE__===true) return;
 
-  const BRAND_SRC='logo-placeholder.svg';
-  const ABOUT_SRC='media-placeholder.svg';
+  const BRAND_SRC='logo.webp';
+  const ABOUT_SRC='master.00000.webp';
   const VIDEO_SRC='';
 
   
@@ -660,7 +660,7 @@ services.insertAdjacentElement('afterend',about);
     media.dataset.brVideoReady='1';
     media.classList.add('br-video-media');
     media.setAttribute('aria-label','Видео SALON NAME');
-    media.innerHTML=VIDEO_SRC?'<video class="br-hero-video" muted autoplay loop playsinline webkit-playsinline preload="metadata" poster="media-placeholder.svg" src="'+VIDEO_SRC+'"></video>':'<img class="br-hero-video" src="media-placeholder.svg" alt="Фото салона">';
+    media.innerHTML=VIDEO_SRC?'<video class="br-hero-video" muted autoplay loop playsinline webkit-playsinline preload="metadata" poster="master.00000.webp" src="'+VIDEO_SRC+'"></video>':'<img class="br-hero-video" src="master.00000.webp" alt="Фото салона">';
     const video=media.querySelector('video');
     if(video){
       video.muted=true;

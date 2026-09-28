@@ -125,7 +125,7 @@
       </div>
 
       <div class="std-hero-photo">
-        <img id="stdHeroMedia" src="media-placeholder.svg" alt="Медиа салона">
+        <img id="stdHeroMedia" src="master.00000.webp" alt="Медиа салона">
       </div>
     </section>
 
@@ -209,7 +209,7 @@
           <div class="mct-about-card">
             <div class="mct-about-portrait-wrap">
               <figure class="mct-about-portrait">
-                <img src="media-placeholder.svg" alt="SALON NAME" loading="lazy">
+                <img src="master.00000.webp" alt="SALON NAME" loading="lazy">
                 <div class="dct-about-rating"><span class="dct-about-rating-star">★</span><strong>—</strong><span>рейтинг не указан</span></div>
               </figure>
             </div>

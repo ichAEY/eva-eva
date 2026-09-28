@@ -42,7 +42,11 @@ function verifyTemplate(){
     cp.execFileSync(process.execPath,["--check",name]);
     const oldCSS=styles(original);
     const extractedPath=name==="desktop.js"?"desktop.css":"mobile.css";
-    const external=fs.existsSync(extractedPath)?fs.readFileSync(extractedPath,"utf8"):null;
+    const externalRaw=fs.existsSync(extractedPath)?fs.readFileSync(extractedPath,"utf8"):null;
+    // Client-only asset URL substitution: identical visual rules, real photo instead of the template placeholder.
+    const external=externalRaw&&name==="desktop.js"
+      ?externalRaw.replace("background-image:url('master.00000.webp')!important","background-image:url('media-placeholder.svg')!important")
+      :externalRaw;
     const mobileFinal=name==="mobile.js"&&fs.existsSync("mobile-overrides.css")?fs.readFileSync("mobile-overrides.css","utf8"):null;
     const newCSS=external?(mobileFinal?[external,mobileFinal]:[external]):styles(current);
     assert(newCSS.length>0,name+": no stylesheets found");
