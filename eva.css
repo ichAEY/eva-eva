@@ -109,6 +109,11 @@ html[data-br-device="desktop"] body,
   -webkit-text-fill-color:#e4ad35!important;
 }
 
+#salon-desktop-v1 .std-contact-card[hidden],
+#salon-mobile .tn22-contact[hidden]{
+  display:none!important;
+}
+
 @media(max-width:1023px){
   #salon-mobile .tn22-brand{
     display:flex!important;
