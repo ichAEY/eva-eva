@@ -37,6 +37,10 @@ def check(browser, width, height, mobile, language):
     root = "#salon-desktop-v1" if desktop else "#salon-mobile"
     page.locator(root).wait_for(state="visible", timeout=18000)
     page.wait_for_function("!document.documentElement.classList.contains('br-booting')")
+    if language not in data["locales"]:
+        context.close()
+        print(f"SKIP {language}: not enabled for {data['country']}")
+        return
     switch = f'[data-desktop-lang="{language}"]' if desktop else f'[data-lang="{language}"]'
     page.locator(switch).first.click(timeout=9000)
     page.wait_for_timeout(250)
