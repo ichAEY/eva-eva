@@ -39,13 +39,20 @@
       "tg": ""
     },
     "city": {
-      "ru": "Балашиха",
+      "ru": "г. Балашиха",
       "en": "Balashikha",
       "hy": "",
       "uz": "",
       "tg": ""
     },
     "address": {
+      "ru": "Павлино, 69",
+      "en": "69 Pavlino",
+      "hy": "",
+      "uz": "",
+      "tg": ""
+    },
+    "fullAddress": {
       "ru": "Московская область, г.о. Балашиха, д. Павлино, 69",
       "en": "69 Pavlino, Balashikha, Moscow Region",
       "hy": "",
@@ -111,7 +118,7 @@
     },
     "messengerHandle": "",
     "mapUrl": "https://yandex.ru/maps/org/yeva/1179517154/",
-    "mapEmbedUrl": "",
+    "mapEmbedUrl": "https://yandex.ru/map-widget/v1/?oid=1179517154",
     "reviewsUrl": "https://yandex.com/maps/org/yeva/1179517154/reviews/",
     "booking": [
       {
@@ -132,10 +139,10 @@
     "count": 310
   },
   "media": {
-    "logo": "logo.webp",
+    "logo": "",
     "hero": [
       {
-        "src": "master.00000.webp",
+        "src": "hero.webp",
         "alt": {
           "ru": "Фото салона EVA",
           "en": "EVA salon photo",
@@ -145,11 +152,10 @@
         }
       }
     ],
-    "heroDesktop": "",
-    "about": "master.00000.webp",
+    "about": "profile.webp",
     "portfolio": [
       {
-        "src": "gallery.00004.webp",
+        "src": "gallery-05.webp",
         "alt": {
           "ru": "Работа EVA — маникюр",
           "en": "EVA manicure work",
@@ -159,7 +165,7 @@
         }
       },
       {
-        "src": "gallery.00005.webp",
+        "src": "gallery-06.webp",
         "alt": {
           "ru": "Работа EVA — маникюр",
           "en": "EVA manicure work",
@@ -169,7 +175,7 @@
         }
       },
       {
-        "src": "gallery.00006.webp",
+        "src": "gallery-07.webp",
         "alt": {
           "ru": "Работа EVA — маникюр",
           "en": "EVA manicure work",
@@ -179,7 +185,7 @@
         }
       },
       {
-        "src": "gallery.00007.webp",
+        "src": "gallery-08.webp",
         "alt": {
           "ru": "Работа EVA — маникюр",
           "en": "EVA manicure work",
@@ -189,7 +195,7 @@
         }
       },
       {
-        "src": "gallery.00008.webp",
+        "src": "gallery-09.webp",
         "alt": {
           "ru": "Работа EVA — волосы",
           "en": "EVA hair work",
@@ -199,7 +205,7 @@
         }
       },
       {
-        "src": "gallery.00009.webp",
+        "src": "gallery-10.webp",
         "alt": {
           "ru": "Работа EVA — волосы",
           "en": "EVA hair work",
@@ -209,7 +215,7 @@
         }
       },
       {
-        "src": "gallery.00010.webp",
+        "src": "gallery-11.webp",
         "alt": {
           "ru": "Работа EVA — волосы",
           "en": "EVA hair work",
@@ -222,7 +228,7 @@
     "gallery": {
       "Салон": [
         {
-          "src": "gallery.00000.webp",
+          "src": "gallery-01.webp",
           "alt": {
             "ru": "Фото салона EVA",
             "en": "EVA salon interior",
@@ -232,7 +238,7 @@
           }
         },
         {
-          "src": "gallery.00001.webp",
+          "src": "gallery-02.webp",
           "alt": {
             "ru": "Фото салона EVA",
             "en": "EVA salon interior",
@@ -242,7 +248,7 @@
           }
         },
         {
-          "src": "gallery.00002.webp",
+          "src": "gallery-03.webp",
           "alt": {
             "ru": "Фото салона EVA",
             "en": "EVA salon interior",
@@ -252,7 +258,7 @@
           }
         },
         {
-          "src": "gallery.00003.webp",
+          "src": "gallery-04.webp",
           "alt": {
             "ru": "Команда EVA",
             "en": "EVA team",
@@ -264,7 +270,7 @@
       ],
       "Маникюр": [
         {
-          "src": "gallery.00004.webp",
+          "src": "gallery-05.webp",
           "alt": {
             "ru": "Работа EVA — маникюр",
             "en": "EVA manicure work",
@@ -274,7 +280,7 @@
           }
         },
         {
-          "src": "gallery.00005.webp",
+          "src": "gallery-06.webp",
           "alt": {
             "ru": "Работа EVA — маникюр",
             "en": "EVA manicure work",
@@ -284,7 +290,7 @@
           }
         },
         {
-          "src": "gallery.00006.webp",
+          "src": "gallery-07.webp",
           "alt": {
             "ru": "Работа EVA — маникюр",
             "en": "EVA manicure work",
@@ -294,7 +300,7 @@
           }
         },
         {
-          "src": "gallery.00007.webp",
+          "src": "gallery-08.webp",
           "alt": {
             "ru": "Работа EVA — маникюр",
             "en": "EVA manicure work",
@@ -306,7 +312,7 @@
       ],
       "Волосы": [
         {
-          "src": "gallery.00008.webp",
+          "src": "gallery-09.webp",
           "alt": {
             "ru": "Работа EVA — волосы",
             "en": "EVA hair work",
@@ -316,7 +322,7 @@
           }
         },
         {
-          "src": "gallery.00009.webp",
+          "src": "gallery-10.webp",
           "alt": {
             "ru": "Работа EVA — волосы",
             "en": "EVA hair work",
@@ -326,7 +332,7 @@
           }
         },
         {
-          "src": "gallery.00010.webp",
+          "src": "gallery-11.webp",
           "alt": {
             "ru": "Работа EVA — волосы",
             "en": "EVA hair work",
@@ -336,7 +342,7 @@
           }
         },
         {
-          "src": "gallery.00011.webp",
+          "src": "gallery-12.webp",
           "alt": {
             "ru": "Работа EVA — волосы",
             "en": "EVA hair work",
@@ -346,7 +352,7 @@
           }
         },
         {
-          "src": "gallery.00012.webp",
+          "src": "gallery-13.webp",
           "alt": {
             "ru": "Работа EVA — волосы",
             "en": "EVA hair work",
@@ -356,7 +362,7 @@
           }
         },
         {
-          "src": "gallery.00013.webp",
+          "src": "gallery-14.webp",
           "alt": {
             "ru": "Работа EVA — волосы",
             "en": "EVA hair work",
@@ -366,7 +372,7 @@
           }
         },
         {
-          "src": "gallery.00014.webp",
+          "src": "gallery-15.webp",
           "alt": {
             "ru": "Работа EVA — волосы",
             "en": "EVA hair work",
@@ -378,7 +384,7 @@
       ],
       "Брови и ресницы": [
         {
-          "src": "gallery.00015.webp",
+          "src": "gallery-16.webp",
           "alt": {
             "ru": "Работа EVA — брови",
             "en": "EVA brow work",
@@ -388,7 +394,7 @@
           }
         },
         {
-          "src": "gallery.00016.webp",
+          "src": "gallery-17.webp",
           "alt": {
             "ru": "Работа EVA — брови",
             "en": "EVA brow work",
@@ -398,7 +404,7 @@
           }
         },
         {
-          "src": "gallery.00017.webp",
+          "src": "gallery-18.webp",
           "alt": {
             "ru": "Работа EVA — брови",
             "en": "EVA brow work",
@@ -408,7 +414,7 @@
           }
         },
         {
-          "src": "gallery.00018.webp",
+          "src": "gallery-19.webp",
           "alt": {
             "ru": "Работа EVA — брови",
             "en": "EVA brow work",
@@ -418,7 +424,7 @@
           }
         },
         {
-          "src": "gallery.00019.webp",
+          "src": "gallery-20.webp",
           "alt": {
             "ru": "Работа EVA — ресницы",
             "en": "EVA lash work",
@@ -428,7 +434,7 @@
           }
         },
         {
-          "src": "gallery.00020.webp",
+          "src": "gallery-21.webp",
           "alt": {
             "ru": "Работа EVA — ресницы",
             "en": "EVA lash work",
@@ -438,7 +444,7 @@
           }
         },
         {
-          "src": "gallery.00021.webp",
+          "src": "gallery-22.webp",
           "alt": {
             "ru": "Работа EVA — ресницы",
             "en": "EVA lash work",
@@ -448,7 +454,7 @@
           }
         },
         {
-          "src": "gallery.00022.webp",
+          "src": "gallery-23.webp",
           "alt": {
             "ru": "Работа EVA — ресницы",
             "en": "EVA lash work",
@@ -460,7 +466,7 @@
       ],
       "Перманент": [
         {
-          "src": "gallery.00023.webp",
+          "src": "gallery-24.webp",
           "alt": {
             "ru": "Работа EVA — перманентный макияж",
             "en": "EVA permanent makeup work",

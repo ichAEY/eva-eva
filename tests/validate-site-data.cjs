@@ -16,7 +16,7 @@ const PLACEHOLDER_RULES=[
   {test:value=>/^(?:Клиент|Client|Հաճախորդ)\s+\d+$/iu.test(value),label:'numbered client'},
   {test:value=>/(?:будет добавлен|будет добавлено|will be added|կավելացվի)/iu.test(value),label:'future placeholder copy'},
   {test:value=>/^(?:Уточняется|To be added|Կավելացվի)$/iu.test(value),label:'unspecified value'},
-  {test:value=>/^(?:Город|City|Քաղաք|Адрес салона|Salon address|Սրահի հասցե)$/iu.test(value),label:'generic location'},
+  {test:value=>/^(?:Город|City|Քաղաք|Адрес салона|Salon address|Սրահի հասցե|Полный адрес салона|Full salon address|Սրահի ամբողջական հասցե)$/iu.test(value),label:'generic location'},
   {test:value=>/^(?:Описание салона\.?|Salon description\.?|Սրահի նկարագրություն։?)$/iu.test(value),label:'generic salon description'},
   {test:value=>/^(?:Источник отзыва|Review source|Կարծիքի աղբյուր)$/iu.test(value),label:'generic review source'}
 ];
@@ -101,6 +101,7 @@ function validateSiteData(data,{rootDir=process.cwd(),allowTestDomains=false}={}
   if(!object(data,'TANEM_SITE_DATA'))return errors;
   if(data.schemaVersion!==1)add('schemaVersion','must equal 1');
   if(!['template','production'].includes(data.mode))add('mode','must be template or production');
+  if(production&&!country)add('country','must not be empty in production');
   if(country&&!COUNTRY_LOCALES[country])add('country','unsupported country; use RU, AM, UZ or TJ');
   if(array(data.locales,'locales')){
     for(const locale of requiredLocales)if(!data.locales.includes(locale))add('locales',`must include ${locale} for ${country||'legacy configuration'}`);
@@ -110,7 +111,19 @@ function validateSiteData(data,{rootDir=process.cwd(),allowTestDomains=false}={}
   if(!requiredLocales.includes(data.defaultLocale))add('defaultLocale',`must be one of ${requiredLocales.join(', ')}`);
 
   if(object(data.salon,'salon')){
-    ['name','kind','city','address','heroDescription','about'].forEach(key=>local(data.salon[key],`salon.${key}`,{required:production}));
+    ['name','kind','city','address','fullAddress','heroDescription','about'].forEach(key=>local(data.salon[key],`salon.${key}`,{required:production}));
+    if(production){
+      for(const locale of requiredLocales){
+        const city=typeof data.salon.city==='object'?String(data.salon.city?.[locale]||'').trim():String(data.salon.city||'').trim();
+        const display=typeof data.salon.address==='object'?String(data.salon.address?.[locale]||'').trim():String(data.salon.address||'').trim();
+        const full=typeof data.salon.fullAddress==='object'?String(data.salon.fullAddress?.[locale]||'').trim():String(data.salon.fullAddress||'').trim();
+        if(display&&full&&display===full&&full.length>35)add(`salon.address.${locale}`,'must be a shortened UI address; keep the complete value in salon.fullAddress');
+        const locationToken=value=>String(value||'').toLocaleLowerCase().replace(/^(?:г\.?|город|city)\s+/iu,'').replace(/[^\p{L}\p{N}]+/gu,' ').trim();
+        const cityToken=locationToken(city),addressToken=locationToken(display);
+        if(cityToken.length>=3&&addressToken&&(addressToken===cityToken||addressToken.startsWith(cityToken+' ')))
+          add(`salon.address.${locale}`,'must not repeat salon.city; keep only the short street/district part');
+      }
+    }
   }
 
   if(object(data.schedule,'schedule')){
@@ -132,6 +145,22 @@ function validateSiteData(data,{rootDir=process.cwd(),allowTestDomains=false}={}
     local(data.contacts.phoneLabel,'contacts.phoneLabel',{required:production&&!!data.contacts.phone});
     local(data.contacts.messengerLabel,'contacts.messengerLabel',{required:production&&!!data.contacts.messengerUrl});
     for(const key of ['messengerUrl','mapUrl','mapEmbedUrl','reviewsUrl'])if(data.contacts[key])url(data.contacts[key],`contacts.${key}`,{allowTel:key==='messengerUrl'});
+    if(production){
+      url(data.contacts.mapUrl||'','contacts.mapUrl',{required:true});
+      url(data.contacts.mapEmbedUrl||'','contacts.mapEmbedUrl',{required:true});
+      const providerHost=value=>{try{return new URL(value).hostname.toLowerCase()}catch{return ''}};
+      const providerOk=(value,wanted)=>{
+        const host=providerHost(value);
+        return wanted==='yandex'?/(^|\.)yandex\./.test(host):(/(^|\.)google\./.test(host)||host==='maps.app.goo.gl'||host.endsWith('.goo.gl'));
+      };
+      const wanted=country==='RU'?'yandex':'google';
+      if(data.contacts.mapUrl&&!providerOk(data.contacts.mapUrl,wanted))add('contacts.mapUrl',`country ${country} must use ${wanted==='yandex'?'Yandex Maps':'Google Maps'}`);
+      if(data.contacts.mapEmbedUrl&&!providerOk(data.contacts.mapEmbedUrl,wanted))add('contacts.mapEmbedUrl',`country ${country} must embed ${wanted==='yandex'?'Yandex Maps':'Google Maps'}`);
+      if(data.contacts.messengerUrl){
+        const label=typeof data.contacts.messengerLabel==='object'?String(data.contacts.messengerLabel.ru||'').trim():String(data.contacts.messengerLabel||'').trim();
+        if(!label||/^(?:Написать|Мессенджер|Message|Write)$/iu.test(label))add('contacts.messengerLabel','must name the actual messenger platform, for example Telegram, WhatsApp, MAX or Viber');
+      }
+    }
     if(data.contacts.phone&&!/^\+?[\d ()-]{7,}$/.test(data.contacts.phone))add('contacts.phone','has an invalid phone format');
     if(array(data.contacts.booking,'contacts.booking'))data.contacts.booking.forEach((item,index)=>{
       const field=`contacts.booking[${index}]`;
@@ -185,15 +214,25 @@ function validateSiteData(data,{rootDir=process.cwd(),allowTestDomains=false}={}
   }
 
   if(object(data.media,'media')){
-    media(data.media.logo,'media.logo',{required:production});
+    // Client logo is optional. hero.webp, profile.webp and 1..25 real gallery photos are the production media contract.
+    if(data.media.logo)media(data.media.logo,'media.logo');
     media(data.media.about,'media.about',{required:production});
-    if(data.media.heroDesktop)media(data.media.heroDesktop,'media.heroDesktop');
+    if(Object.prototype.hasOwnProperty.call(data.media,'heroDesktop'))add('media.heroDesktop','obsolete field; use the same hero.webp on mobile and desktop');
     if(array(data.media.hero,'media.hero')){
-      if(production&&!data.media.hero.length)add('media.hero','must contain at least one item');
+      if(production&&!data.media.hero.length)add('media.hero','must contain hero.webp');
+      if(production&&data.media.hero.length>1)add('media.hero','must contain exactly one canonical hero.webp');
       data.media.hero.forEach((item,index)=>{media(item,`media.hero[${index}]`,{required:true});if(item?.alt)local(item.alt,`media.hero[${index}].alt`,{required:production})});
     }
     if(array(data.media.portfolio,'media.portfolio'))data.media.portfolio.forEach((item,index)=>{media(item,`media.portfolio[${index}]`,{required:true});if(item?.alt)local(item.alt,`media.portfolio[${index}].alt`,{required:production})});
-    if(object(data.media.gallery,'media.gallery'))for(const [group,items] of Object.entries(data.media.gallery))if(array(items,`media.gallery.${group}`))items.forEach((item,index)=>{media(item,`media.gallery.${group}[${index}]`,{required:true});if(item?.alt)local(item.alt,`media.gallery.${group}[${index}].alt`,{required:production})});
+    const gallerySources=new Set();
+    if(object(data.media.gallery,'media.gallery'))for(const [group,items] of Object.entries(data.media.gallery))if(array(items,`media.gallery.${group}`))items.forEach((item,index)=>{
+      media(item,`media.gallery.${group}[${index}]`,{required:true});
+      if(item?.alt)local(item.alt,`media.gallery.${group}[${index}].alt`,{required:production});
+      const source=typeof item==='string'?item:item?.src;
+      if(typeof source==='string'&&source.trim())gallerySources.add(source.trim());
+    });
+    if(production&&gallerySources.size<1)add('media.gallery','must contain at least one real gallery-XX.webp photo');
+    if(gallerySources.size>25)add('media.gallery','must contain at most 25 unique gallery photos');
   }
 
   const reviewIds=new Set();
@@ -219,7 +258,8 @@ function validateSiteData(data,{rootDir=process.cwd(),allowTestDomains=false}={}
     teamIds.add(member.id);
     local(member.name,`${field}.name`,{required:production});
     local(member.role,`${field}.role`,{required:production});
-    local(member.about,`${field}.about`);
+    local(member.about,`${field}.about`,{required:production});
+    if(production||member.photo)media(member.photo,`${field}.photo`,{required:production});
     if(array(member.categories,`${field}.categories`))member.categories.forEach((category,categoryIndex)=>{if(!categories.has(category))add(`${field}.categories[${categoryIndex}]`,'must exist in categoryLabels')});
     if(array(member.work,`${field}.work`))member.work.forEach((item,workIndex)=>media(item,`${field}.work[${workIndex}]`,{required:true}));
     if(array(member.reviewIds,`${field}.reviewIds`))member.reviewIds.forEach((id,reviewIndex)=>{if(!reviewIds.has(id))add(`${field}.reviewIds[${reviewIndex}]`,'must reference an existing review')});

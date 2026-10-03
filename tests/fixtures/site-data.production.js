@@ -5,13 +5,15 @@
   const siteData={
     schemaVersion:1,
     mode:'production',
+    country:'AM',
     locales:['ru','en','hy'],
     defaultLocale:'ru',
     salon:{
       name:t('Люмен','Lumen','Լյումեն'),
       kind:t('Салон красоты','Beauty salon','Գեղեցկության սրահ'),
       city:t('Ереван','Yerevan','Երևան'),
-      address:t('ул. Абовяна, 12','12 Abovyan St','Աբովյան փ. 12'),
+      address:t('Абовяна, 12','12 Abovyan St','Աբովյան փ. 12'),
+      fullAddress:t('Армения, Ереван, ул. Абовяна, 12','12 Abovyan St, Yerevan, Armenia','Հայաստան, Երևան, Աբովյան փ. 12'),
       heroDescription:t('Уход за волосами в центре Еревана','Hair care in central Yerevan','Մազերի խնամք Երևանի կենտրոնում'),
       about:t('Спокойное пространство и опытные мастера.','A calm space with experienced specialists.','Հանգիստ միջավայր և փորձառու մասնագետներ։')
     },
@@ -24,9 +26,10 @@
       phone:'+374 10 555 555',
       phoneLabel:t('Позвонить','Call','Զանգահարել'),
       messengerUrl:'https://t.me/lumen_salon',
-      messengerLabel:t('Написать в Telegram','Message on Telegram','Գրել Telegram-ում'),
+      messengerLabel:t('Telegram','Telegram','Telegram'),
       messengerHandle:'@lumen_salon',
-      mapUrl:'https://example.com/maps/lumen',
+      mapUrl:'https://www.google.com/maps/search/?api=1&query=12+Abovyan+St+Yerevan+Armenia',
+      mapEmbedUrl:'https://www.google.com/maps?q=12+Abovyan+St+Yerevan+Armenia&output=embed',
       reviewsUrl:'https://example.com/reviews/lumen',
       booking:[{type:'online',label:t('Онлайн-запись','Book online','Առցանց գրանցում'),url:'https://example.com/book/lumen'}]
     },
@@ -34,10 +37,10 @@
     media:{
       logo:'tests/fixtures/logo.svg',
       hero:[photo('Интерьер салона','Salon interior','Սրահի ինտերիեր')],
-      heroDesktop:'tests/fixtures/photo.svg',
+
       about:'tests/fixtures/photo.svg',
       portfolio:[],
-      gallery:{},
+      gallery:{'Волосы':[photo('Работа салона','Salon work','Salon work')]},
       desktopGalleryLimits:{}
     },
     categoryLabels:{'Волосы':t('Волосы','Hair','Մազեր')},

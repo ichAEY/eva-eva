@@ -17,6 +17,17 @@
   const esc=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
   const isExternal=url=>/^(?:https?:|tg:|viber:|whatsapp:)/i.test(String(url||''));
   const phoneHref=()=>data.contacts.phone?'tel:'+String(data.contacts.phone).replace(/[^+\d]/g,''):'';
+  const mapActionLabel=lang=>data.country==='RU'
+    ?(lang==='en'?'Open in Yandex Maps':lang==='hy'?'Բացել Yandex Maps-ում':'Открыть в Яндекс Картах')
+    :(lang==='en'?'Open in Google Maps':lang==='hy'?'Բացել Google Maps-ում':'Открыть в Google Maps');
+  const callActionLabel=lang=>lang==='en'?'Call':lang==='hy'?'Զանգահարել':'Позвонить';
+  const messageActionLabel=(lang,name)=>lang==='en'?'Message '+name:lang==='hy'?'Գրել '+name:'Написать в '+name;
+  const setCardVisible=(node,visible)=>{
+    if(!node)return;
+    node.hidden=!visible;
+    if(visible)node.style.removeProperty('display');
+    else node.style.setProperty('display','none','important');
+  };
 
   function setText(selector,value,scope=document){
     scope.querySelectorAll(selector).forEach(node=>{node.textContent=value});
@@ -186,14 +197,24 @@
     const salon=data.salon,contacts=data.contacts;
     setText('.std-header-brand-main,.std-logo,.dct-about-brand',text(salon.name,lang),root);
     const desktopBrand=root.querySelector('.std-header-brand-main');
-    if(desktopBrand&&data.media.logo){
-      desktopBrand.classList.add('has-logo');
-      desktopBrand.style.width='100%';
-      desktopBrand.style.height='46px';
-      desktopBrand.style.display='flex';
-      desktopBrand.style.alignItems='center';
-      desktopBrand.style.justifyContent='flex-start';
-      desktopBrand.innerHTML='<img class="std-header-brand-logo" style="display:block;max-width:100%;max-height:46px;width:auto;height:auto;object-fit:contain;object-position:left center" src="'+esc(data.media.logo)+'" alt="'+esc(text(salon.name,lang))+'">';
+    if(desktopBrand){
+      const cleanName=text(salon.name,lang).trim();
+      const fitDesktopBrand=()=>{
+        if(desktopBrand.textContent.trim()!==cleanName)return;
+        desktopBrand.style.removeProperty('font-size');
+        const nav=root.querySelector('.std-nav');
+        if(!nav)return;
+        const brandRect=desktopBrand.getBoundingClientRect(),navRect=nav.getBoundingClientRect();
+        const available=Math.max(0,navRect.left-brandRect.left-12);
+        const rendered=desktopBrand.scrollWidth;
+        const base=parseFloat(getComputedStyle(desktopBrand).fontSize)||31;
+        if(available>0&&rendered>available+1){
+          const fitted=Math.max(18,Math.floor(base*(available/rendered)*.96));
+          desktopBrand.style.setProperty('font-size',fitted+'px','important');
+        }
+      };
+      requestAnimationFrame(fitDesktopBrand);
+      if(document.fonts?.ready)document.fonts.ready.then(()=>requestAnimationFrame(fitDesktopBrand)).catch(()=>{});
     }
     setText('.std-tagline',text(salon.heroDescription,lang),root);
     setText('.dct-about-kind',text(salon.kind,lang),root);
@@ -202,19 +223,26 @@
     if(address){address.textContent='';address.append(text(salon.city,lang)+',',document.createElement('br'),text(salon.address,lang))}
     const stickyRoute=root.querySelector('.dct-service-sticky-route');
     if(stickyRoute){setText('b',text(salon.city,lang),stickyRoute);setText('small',text(salon.address,lang),stickyRoute);setLink(stickyRoute,contacts.mapUrl,'#salonDesktopContacts')}
-    const contactCards=root.querySelectorAll('#salonDesktopContacts .std-contact-list > .std-contact-card');
-    if(contactCards[0]){setText('.std-contact-card-title',text(salon.city,lang)+', '+text(salon.address,lang),contactCards[0]);setText('.std-contact-card-sub',text(salon.address,lang),contactCards[0]);setLink(contactCards[0],contacts.mapUrl,'#salonDesktopContacts')}
-    if(contactCards[1]){setText('.std-contact-card-title',text(contacts.phoneLabel,lang),contactCards[1]);setText('.std-contact-card-sub',contacts.phone||'',contactCards[1]);setLink(contactCards[1],phoneHref(),'#salonDesktopContacts')}
-    if(contactCards[2]){setText('.std-contact-card-title',text(contacts.messengerLabel,lang),contactCards[2]);setText('.std-contact-card-sub',contacts.messengerHandle||text(contacts.messengerLabel,lang),contactCards[2]);setLink(contactCards[2],contacts.messengerUrl,'#salonDesktopContacts')}
-    setLink(root.querySelector('.std-phone'),phoneHref(),'#salonDesktopContacts');
-    setText('.std-phone span',contacts.phone||text(contacts.phoneLabel,lang),root);
+    const addressCard=root.querySelector('#salonDesktopContacts [data-contact-type="address"]');
+    const phoneCard=root.querySelector('#salonDesktopContacts [data-contact-type="phone"]');
+    const messengerCard=root.querySelector('#salonDesktopContacts [data-contact-type="messenger"]');
+    if(addressCard){setText('.std-contact-card-title',text(salon.city,lang)+', '+text(salon.address,lang),addressCard);setText('.std-contact-card-sub',mapActionLabel(lang),addressCard);setLink(addressCard,contacts.mapUrl,'#salonDesktopContacts')}
+    setCardVisible(phoneCard,!!contacts.phone);
+    if(phoneCard&&contacts.phone){setText('.std-contact-card-title',contacts.phone,phoneCard);setText('.std-contact-card-sub',callActionLabel(lang),phoneCard);setLink(phoneCard,phoneHref(),'#salonDesktopContacts')}
+    setCardVisible(messengerCard,!!contacts.messengerUrl);
+    if(messengerCard&&contacts.messengerUrl){setText('.std-contact-card-title',text(contacts.messengerLabel,lang),messengerCard);setText('.std-contact-card-sub',messageActionLabel(lang,text(salon.name,lang)),messengerCard);setLink(messengerCard,contacts.messengerUrl,'#salonDesktopContacts')}
+    const headerPhone=root.querySelector('.std-phone');
+    const contactCall=root.querySelector('.std-contact-call');
+    setCardVisible(headerPhone,!!contacts.phone);
+    setCardVisible(contactCall,!!contacts.phone);
+    root.querySelector('#salonDesktopContacts .std-contact-actions')?.classList.toggle('is-single',!contacts.phone);
+    if(headerPhone&&contacts.phone){setLink(headerPhone,phoneHref(),'#salonDesktopContacts');setText('span',contacts.phone,headerPhone)}
     setLink(root.querySelector('.std-meta .std-meta-item[href]'),contacts.mapUrl,'#salonDesktopContacts');
-    setLink(root.querySelector('.std-contact-call'),phoneHref(),'#salonDesktopContacts');
+    if(contactCall&&contacts.phone)setLink(contactCall,phoneHref(),'#salonDesktopContacts');
     setLink(root.querySelector('.std-contact-route'),contacts.mapUrl,'#salonDesktopContacts');
     const mapFrame=root.querySelector('.std-contact-map iframe');
     if(mapFrame)mapFrame.src=contacts.mapEmbedUrl||'about:blank';
-    const mobileHero=data.media.hero?.[0];
-    const hero=data.media.heroDesktop||mobileHero;
+    const hero=data.media.hero?.[0];
     const heroImage=root.querySelector('#stdHeroMedia');
     if(heroImage&&hero){
       const src=typeof hero==='string'?hero:hero.src;
@@ -234,6 +262,27 @@
     if(!root)return;
     const salon=data.salon,contacts=data.contacts;
     setText('.tn22-title,.br-about-brand',text(salon.name,lang),root);
+    const mobileTitle=root.querySelector('.tn22-title');
+    if(mobileTitle){
+      const cleanName=text(salon.name,lang).trim();
+      const single=cleanName.length>0&&!/\s/u.test(cleanName);
+      mobileTitle.classList.toggle('is-single-line',single);
+      const baseMax=cleanName.length<=5?68:cleanName.length<=8?60:cleanName.length<=10?54:49;
+      mobileTitle.style.setProperty('--hero-single-max',baseMax+'px');
+      if(single){
+        const fitSingleTitle=()=>{
+          if(mobileTitle.textContent.trim()!==cleanName)return;
+          mobileTitle.style.setProperty('--hero-single-max',baseMax+'px');
+          const available=mobileTitle.clientWidth,rendered=mobileTitle.scrollWidth;
+          if(available>0&&rendered>available+1){
+            const fitted=Math.max(34,Math.floor(baseMax*(available/rendered)*.96));
+            mobileTitle.style.setProperty('--hero-single-max',fitted+'px');
+          }
+        };
+        requestAnimationFrame(fitSingleTitle);
+        if(document.fonts?.ready)document.fonts.ready.then(()=>requestAnimationFrame(fitSingleTitle)).catch(()=>{});
+      }
+    }
     setText('.tn22-sub,.br-about-kind',text(salon.kind,lang),root);
     setText('#tn38About .tn42-copy',text(salon.about,lang),root);
     const location=root.querySelector('.tn37-location .tn37-info-copy');
@@ -241,18 +290,32 @@
     const galleryBrand=root.querySelector('.tn22-gallery-title span');
     if(galleryBrand)galleryBrand.textContent=text(salon.name,lang);
     setText('.tn22-master-brand',text(salon.name,lang),root);
-    const brandImage=root.querySelector('.tn22-brand img');
-    if(brandImage){brandImage.src=data.media.logo;brandImage.alt=text(salon.name,lang)}
+    const topBrand=root.querySelector('.tn22-brand');
+    if(topBrand){
+      const realLogo=data.mode==='production'&&data.media.logo&&!/logo-placeholder\.svg$/i.test(String(data.media.logo));
+      if(realLogo){
+        let brandImage=topBrand.querySelector('img');
+        if(!brandImage){brandImage=document.createElement('img');topBrand.replaceChildren(brandImage)}
+        brandImage.src=data.media.logo;brandImage.alt=text(salon.name,lang);
+      }else topBrand.textContent=text(salon.name,lang);
+    }
     const heroImage=root.querySelector('.br-hero-video');
     const hero=data.media.hero?.[0];
     if(heroImage&&hero&&heroImage.tagName==='IMG'){heroImage.src=hero.src;heroImage.alt=text(hero.alt,lang)}
     const aboutImage=root.querySelector('#tn38About .tn42-photo img');
     if(aboutImage&&data.media.about){aboutImage.src=data.media.about;aboutImage.alt=text(salon.name,lang)}
-    const cards=root.querySelectorAll('#tn13Visit .tn22-contact-grid > *');
-    if(cards[0]){setText('strong',text(salon.city,lang)+', '+text(salon.address,lang),cards[0]);const sub=cards[0].querySelector('strong+span');if(sub)sub.textContent=text(salon.address,lang);setLink(cards[0],contacts.mapUrl,'#tn13Visit')}
-    if(cards[1]){setText('strong',text(contacts.phoneLabel,lang),cards[1]);const sub=cards[1].querySelector('strong+span');if(sub)sub.textContent=contacts.phone||'';setLink(cards[1],phoneHref(),'#tn13Visit')}
-    if(cards[2]){setText('strong',text(contacts.messengerLabel,lang),cards[2]);const sub=cards[2].querySelector('strong+span');if(sub)sub.textContent=contacts.messengerHandle||text(contacts.messengerLabel,lang);setLink(cards[2],contacts.messengerUrl,'#tn13Visit')}
-    setLink(root.querySelector('.tn22-call'),phoneHref(),'#tn13Visit');
+    const addressCard=root.querySelector('#tn13Visit [data-contact-type="address"]');
+    const phoneCard=root.querySelector('#tn13Visit [data-contact-type="phone"]');
+    const messengerCard=root.querySelector('#tn13Visit [data-contact-type="messenger"]');
+    if(addressCard){setText('strong',text(salon.city,lang)+', '+text(salon.address,lang),addressCard);const sub=addressCard.querySelector('strong+span');if(sub)sub.textContent=mapActionLabel(lang);setLink(addressCard,contacts.mapUrl,'#tn13Visit')}
+    setCardVisible(phoneCard,!!contacts.phone);
+    if(phoneCard&&contacts.phone){setText('strong',contacts.phone,phoneCard);const sub=phoneCard.querySelector('strong+span');if(sub)sub.textContent=callActionLabel(lang);setLink(phoneCard,phoneHref(),'#tn13Visit')}
+    setCardVisible(messengerCard,!!contacts.messengerUrl);
+    if(messengerCard&&contacts.messengerUrl){setText('strong',text(contacts.messengerLabel,lang),messengerCard);const sub=messengerCard.querySelector('strong+span');if(sub)sub.textContent=messageActionLabel(lang,text(salon.name,lang));setLink(messengerCard,contacts.messengerUrl,'#tn13Visit')}
+    const mobileCall=root.querySelector('.tn22-call');
+    setCardVisible(mobileCall,!!contacts.phone);
+    root.querySelector('.tn22-visit-actions')?.classList.toggle('is-single',!contacts.phone);
+    if(mobileCall&&contacts.phone)setLink(mobileCall,phoneHref(),'#tn13Visit');
     setLink(root.querySelector('.tn22-route'),contacts.mapUrl,'#tn13Visit');
     const mapFrame=root.querySelector('.tn22-mapwrap iframe');
     if(mapFrame)mapFrame.src=contacts.mapEmbedUrl||'about:blank';
@@ -262,14 +325,10 @@
   function applyOptionalSections(){
     const hasPortfolio=(data.media.portfolio||[]).length>0;
     const hasGallery=Object.values(data.media.gallery||{}).some(items=>items.length>0);
-    const hasReviews=(data.reviews||[]).length>0;
-    const hasTeam=(data.team||[]).length>0;
     ['#salonDesktopPortfolio','#tn13Portfolio'].forEach(selector=>{const node=document.querySelector(selector);if(node)node.hidden=!hasPortfolio});
-    ['#salonDesktopReviews','#tn13Reviews'].forEach(selector=>{const node=document.querySelector(selector);if(node)node.hidden=!hasReviews});
-    ['#salonDesktopTeam','#tn13Team'].forEach(selector=>{const node=document.querySelector(selector);if(node)node.hidden=!hasTeam});
+    // Team and reviews are permanent structural sections. Missing data is rendered as a neutral empty state.
+    ['#salonDesktopReviews','#tn13Reviews','#salonDesktopTeam','#tn13Team'].forEach(selector=>{const node=document.querySelector(selector);if(node)node.hidden=false});
     if(!hasGallery)document.querySelectorAll('#stdOpenGallery,#stdStickyGalleryOpen,.tn22-port-all,.tn22-worklink,.tn22-media').forEach(node=>{node.hidden=true});
-    if(!hasReviews)document.querySelectorAll('a[href="#salonDesktopReviews"],a[href="#tn13Reviews"],[data-section="tn13Reviews"]').forEach(node=>node.remove());
-    if(!hasTeam)document.querySelectorAll('a[href="#tn13Team"],[data-section="tn13Team"]').forEach(node=>node.remove());
   }
 
   function apply(){

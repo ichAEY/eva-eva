@@ -20,14 +20,15 @@
     country:'RU', // RU: ru/en; AM: ru/en/hy; UZ: ru/en/uz; TJ: ru/en/tg
     locales:['ru','en'],
     defaultLocale:'ru',
-    salon:{name:t(),kind:t('Салон красоты','Beauty salon','Գեղեցկության սրահ'),city:t(),address:t(),heroDescription,about},
+    // city/address are short UI strings; fullAddress keeps the verified full postal/admin address for maps and metadata.
+    salon:{name:t(),kind:t('Салон красоты','Beauty salon','Գեղեցկության սրահ'),city:t(),address:t(),fullAddress:t(),heroDescription,about},
     schedule:{timezone:'Europe/Moscow',periods:[],fallback:t()},
     contacts:{phone:'',phoneLabel:t('Позвонить','Call','Զանգահարել'),
       messengerUrl:'',messengerLabel:t('Написать','Message','Գրել'),messengerHandle:'',
       mapUrl:'',mapEmbedUrl:'',reviewsUrl:'',booking:[]},
     rating:{value:null,count:0},
-    // Media contract: see RULES.md. hero[0] = master.00000.webp; heroDesktop = masterpc.00000.webp (optional); logo = logo.webp.
-    media:{logo:'',hero:[],heroDesktop:'',about:'',portfolio:[],gallery:{},desktopGalleryLimits:{}},
+    // Media contract: hero.webp -> hero[0], profile.webp -> about, gallery-01.webp...gallery-25.webp -> portfolio/gallery, optional transparent logo.*.
+    media:{logo:'',hero:[],about:'',portfolio:[],gallery:{},desktopGalleryLimits:{}},
     categoryLabels:{},
     categoryOrder:[],
     services:[], // No demo services. Add one object per actual client service.

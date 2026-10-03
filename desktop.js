@@ -16,7 +16,7 @@
   const MAP_URL=SITE.contacts.mapUrl||'#salonDesktopContacts';
   const ROUTE=MAP_URL;
   const MESSENGER_URL=SITE.contacts.messengerUrl||'#salonDesktopContacts';
-  const REVIEWS_URL=SITE.contacts.reviewsUrl||MAP_URL;
+  const REVIEWS_URL=SITE.contacts.reviewsUrl||'#salonDesktopReviews';
   const DESKTOP_REAL_REVIEWS=SITE.reviews.map(review=>[russian(review.author),russian(review.text)]);
   const mediaItem=item=>({src:item.src,alt:russian(item.alt)});
   const PORTFOLIO=SITE.media.portfolio.map(mediaItem);
@@ -45,10 +45,15 @@
     name:russian(master.name),
     role:russian(master.role),
     about:russian(master.about),
+    photo:typeof master.photo==='string'?master.photo:(master.photo?.src||''),
     cats:[...(master.categories||[])],
     work:(master.work||[]).map(item=>typeof item==='string'?item:item.src)
   }));
+  const DISPLAY_TEAM_MASTERS=TEAM_MASTERS.length?TEAM_MASTERS:Array.from({length:4},(_,index)=>({
+    id:'placeholder-'+(index+1),name:'Мастер',role:'',about:'',photo:'',cats:[],work:[],placeholder:true
+  }));
   const TEAM_AVATAR='<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="23" r="11" fill="currentColor"></circle><path d="M12 56c2.7-11.4 10-17 20-17s17.3 5.6 20 17" fill="currentColor"></path></svg>';
+  const teamAvatar=master=>master.photo?'<img src="'+master.photo+'" alt="'+master.name+'" style="display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit">':TEAM_AVATAR;
 
   const font=document.createElement('link');
   font.rel='stylesheet';
@@ -56,7 +61,7 @@
   document.head.appendChild(font);
   const root=document.createElement('div');
   root.id='salon-desktop-v1';
-  root.dataset.emptyTeam=TEAM_MASTERS.length?'0':'1';
+  root.dataset.emptyTeam='0'; // Team is permanent: an empty team uses the neutral visible state.
   root.innerHTML=`
     <header class="std-header">
       <a class="std-header-brand" href="#salonDesktopTop" aria-label="SALON NAME">
@@ -229,11 +234,18 @@
 
         <aside class="br-team-panel" id="salonDesktopTeam" aria-labelledby="stdTeamTitle">
           <p class="std-team-kicker">Наша команда</p>
-          <p class="std-team-subtitle">Нажмите на мастера, чтобы открыть страницу специалиста.</p>
+          <p class="std-team-subtitle">${TEAM_MASTERS.length?'Нажмите на мастера, чтобы открыть страницу специалиста.':'Команда салона'}</p>
           <div class="std-team-track" id="stdTeamTrack">
-            ${TEAM_MASTERS.map(master=>`
+            ${DISPLAY_TEAM_MASTERS.map(master=>master.placeholder?`
+              <div class="std-master is-placeholder">
+                <div class="std-master-avatar">${teamAvatar(master)}</div>
+                <strong class="std-master-name">Мастер</strong>
+                <span class="std-master-role"></span>
+                <span class="std-master-cats"></span>
+              </div>
+            `:`
               <button class="std-master" type="button" data-desktop-master="${master.id}">
-                <div class="std-master-avatar">${TEAM_AVATAR}</div>
+                <div class="std-master-avatar">${teamAvatar(master)}</div>
                 <strong class="std-master-name">${master.name}</strong>
                 <span class="std-master-role">${master.role}</span>
                 <span class="std-master-cats">${master.cats.map(cat=>'<span class="std-master-cat">'+cat+'</span>').join('')}</span>
@@ -312,28 +324,28 @@
 
         <div class="std-contact-body">
           <div class="std-contact-list">
-            <a class="std-contact-card" href="${MAP_URL}" aria-disabled="true">
+            <a class="std-contact-card" data-contact-type="address" href="${MAP_URL}" aria-disabled="true">
               <span class="std-contact-card-icon">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6.5-5.4 6.5-11a6.5 6.5 0 1 0-13 0c0 5.6 6.5 11 6.5 11Z"></path><circle cx="12" cy="10" r="2.2"></circle></svg>
               </span>
               <span class="std-contact-card-copy"><strong class="std-contact-card-title">Город, адрес салона</strong><span class="std-contact-card-sub">Адрес салона</span></span>
             </a>
 
-            <a class="std-contact-card" href="#salonDesktopContacts">
+            <a class="std-contact-card" data-contact-type="phone" href="#salonDesktopContacts">
               <span class="std-contact-card-icon">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h3l1.3 4-2 1.5c1 2 2.6 3.6 4.6 4.6l1.5-2L19 13.5v3c0 1.1-.9 2-2 2C10.4 18.5 5.5 13.6 5.5 7A2 2 0 0 1 7 4Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
               </span>
               <span class="std-contact-card-copy"><strong class="std-contact-card-title">Телефон салона</strong><span class="std-contact-card-sub">Контакт будет добавлен</span></span>
             </a>
 
-            <a class="std-contact-card" href="${MESSENGER_URL}" aria-disabled="true">
+            <a class="std-contact-card" data-contact-type="messenger" href="${MESSENGER_URL}" aria-disabled="true">
               <span class="std-contact-card-icon">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5h14v10H9l-4 3v-13Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.5 9.2c.8 2.2 2.1 3.5 4.3 4.3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
               </span>
               <span class="std-contact-card-copy"><strong class="std-contact-card-title">Мессенджер</strong><span class="std-contact-card-sub">Контакт будет добавлен</span></span>
             </a>
 
-            <div class="std-contact-card static">
+            <div class="std-contact-card static" data-contact-type="hours">
               <span class="std-contact-card-icon">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3.2 1.8"></path></svg>
               </span>
@@ -1247,6 +1259,7 @@
     ['Наша команда','Մեր թիմը','Our Team'],['Наша команда','Մեր թիմը','Our Team'],
     ['Нажмите на мастера, чтобы открыть отдельную страницу специалиста.','Ընտրեք մասնագետին՝ նրա էջը բացելու համար։','Select a specialist to open their profile.'],
     ['Нажмите на мастера, чтобы открыть страницу специалиста.','Ընտրեք մասնագետին՝ նրա էջը բացելու համար։','Choose a specialist to open their profile.'],
+    ['Информация о мастерах будет добавлена.','Մասնագետների մասին տեղեկությունը կավելացվի։','Specialist information will be added.'],
     ['Nail-мастер','Մատնահարդարման վարպետ','Nail specialist'],['Парикмахер','Վարսահարդար','Hair stylist'],['Косметолог','Կոսմետոլոգ','Cosmetologist'],
     ['Brow & Lash-мастер','Հոնքերի և թարթիչների վարպետ','Brow & lash specialist'],
     ['Маникюр · педикюр','Մատնահարդարում · ոտնահարդարում','Manicure · pedicure'],['Волосы · укладки','Մազեր · հարդարում','Hair · styling'],
