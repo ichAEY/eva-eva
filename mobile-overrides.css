@@ -429,12 +429,17 @@ html{background:linear-gradient(to bottom,#fafaf9 0%,#fafaf9 58%,#181818 100%)!i
     min-height:86px!important;
     margin:0!important;
     text-align:center!important;
+    text-indent:0!important;
+    padding-left:.18em!important;
+    padding-right:0!important;
   }
   #salon-mobile #tn13Top .tn22-title.is-single-line{
     font-size:clamp(34px,16vw,var(--hero-single-max,68px))!important;
     line-height:.92!important;
     letter-spacing:.16em!important;
-    text-indent:.16em!important;
+    text-indent:0!important;
+    padding-left:.16em!important;
+    padding-right:0!important;
     white-space:nowrap!important;
   }
   #salon-mobile #tn13Top .tn22-sub{
@@ -462,6 +467,7 @@ html{background:linear-gradient(to bottom,#fafaf9 0%,#fafaf9 58%,#181818 100%)!i
   #salon-mobile #tn13Gallery .tn22-gallery-tabs-wrap{
     position:sticky!important;
     overflow:visible!important;
+    margin-top:26px!important;
     background:transparent!important;
     box-shadow:none!important;
     backdrop-filter:none!important;
@@ -471,6 +477,7 @@ html{background:linear-gradient(to bottom,#fafaf9 0%,#fafaf9 58%,#181818 100%)!i
     width:100%!important;
     display:flex!important;
     gap:0!important;
+    margin-top:0!important;
     overflow-x:auto!important;
     overflow-y:hidden!important;
     scrollbar-width:none!important;
@@ -492,26 +499,27 @@ html{background:linear-gradient(to bottom,#fafaf9 0%,#fafaf9 58%,#181818 100%)!i
     position:absolute!important;
     z-index:8!important;
     top:50%!important;
-    transform:translateY(-50%) scale(.9)!important;
-    width:28px!important;
-    height:28px!important;
-    border-radius:999px!important;
+    transform:translateY(-50%)!important;
+    width:10px!important;
+    height:22px!important;
+    border-radius:0!important;
     display:grid!important;
     place-items:center!important;
     pointer-events:none!important;
-    background:rgba(36,31,29,.88)!important;
-    border:1px solid rgba(255,255,255,.15)!important;
-    color:#fff!important;
-    font:500 24px/1 Arial,sans-serif!important;
+    background:transparent!important;
+    border:0!important;
+    box-shadow:none!important;
+    color:#181818!important;
+    font:500 18px/1 Arial,sans-serif!important;
     opacity:0!important;
-    transition:opacity .18s ease,transform .18s ease!important;
+    transition:opacity .18s ease!important;
   }
   #salon-mobile #tn13Gallery .tn22-gallery-rail-hint.visible{
     opacity:1!important;
-    transform:translateY(-50%) scale(1)!important;
+    transform:translateY(-50%)!important;
   }
-  #salon-mobile #tn13Gallery .tn22-gallery-rail-hint.left{left:5px!important}
-  #salon-mobile #tn13Gallery .tn22-gallery-rail-hint.right{right:5px!important}
+  #salon-mobile #tn13Gallery .tn22-gallery-rail-hint.left{left:calc(-10px - .2cm)!important}
+  #salon-mobile #tn13Gallery .tn22-gallery-rail-hint.right{right:calc(-10px - .2cm)!important}
 
   #salon-mobile .tn22-view-gallery{
     height:44px!important;
