@@ -93,8 +93,10 @@ html[data-br-device="desktop"] #salon-desktop-v1 #salonDesktopServices .dct-serv
   border-color:rgba(37,37,37,.13)!important;
 }
 html[data-br-device="desktop"] #salon-desktop-v1 #salonDesktopServices :is(.dct-service-card-meta>b.is-price,.dct-service-card-variant-meta>b.is-price){
-  background:#F5F2ED!important;
-  color:#252525!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  color:#F5F2ED!important;
 }
 html[data-br-device="desktop"] #salon-desktop-v1 #salonDesktopServices :is(.mct-tab.is-active,.mct-tab-all.is-active[aria-selected="true"]){
   background:#F5F2ED!important;
@@ -246,8 +248,8 @@ html[data-br-device="mobile"] #salon-mobile #tn13Gallery .tn22-gallery-tabs{
   overflow-x:auto!important;overflow-y:hidden!important;scrollbar-width:none!important;
 }
 html[data-br-device="mobile"] #salon-mobile #tn13Gallery .tn22-gallery-tab{
-  flex:1 0 max-content!important;min-width:max-content!important;padding-inline:12px!important;
-  font-size:13.3px!important;line-height:1.15!important;white-space:nowrap!important;
+  flex:0 0 auto!important;width:max-content!important;min-width:max-content!important;padding-inline:18px!important;
+  font-size:14.36px!important;line-height:1.15!important;white-space:nowrap!important;
   background:transparent!important;color:#252525!important;
 }
 html[data-br-device="mobile"] #salon-mobile #tn13Gallery .tn22-gallery-tab.active{
@@ -366,8 +368,11 @@ html[data-br-device="mobile"] #salon-mobile #tn13Services .tn31-cats{
 html[data-br-device="mobile"] #salon-mobile #tn13Services .tn31-cats .tn31-cat{
   flex:0 0 auto!important;width:max-content!important;min-width:max-content!important;
   height:35px!important;padding:0 15px!important;
-  font:500 12.705px/1 'Manrope',Arial,sans-serif!important;
+  font:500 13.98px/1 'Manrope',Arial,sans-serif!important;
   white-space:nowrap!important;word-break:normal!important;overflow-wrap:normal!important;
+}
+html[data-br-device="mobile"] #salon-mobile #tn13Services .tn31-cats.is-two .tn31-cat{
+  flex:1 1 0!important;width:auto!important;min-width:0!important;max-width:none!important;
 }
 html[data-br-device="mobile"] #salon-mobile #tn13Services .tn31-cats::before,html[data-br-device="mobile"] #salon-mobile #tn13Services .tn31-cats::after{
   content:none!important;display:none!important;
@@ -381,19 +386,24 @@ html[data-br-device="mobile"] #salon-mobile .tn22-viewer .tn23-viewer-foot{
 html[data-br-device="mobile"] #salon-mobile .tn22-viewer .tn22-view-gallery{
   position:absolute!important;left:50%!important;top:50%!important;bottom:auto!important;
   transform:translate(-50%,-50%)!important;
-  height:42px!important;min-width:154px!important;
-  padding:0 17px!important;display:inline-flex!important;
+  height:44px!important;min-width:162px!important;
+  padding:0 20px!important;display:inline-flex!important;
   align-items:center!important;justify-content:center!important;
-  white-space:nowrap!important;
+  white-space:nowrap!important;font-size:12px!important;
 }
 html[data-br-device="mobile"] #salon-mobile .tn22-viewer:not([data-source="portfolio"]) .tn22-view-gallery,html[data-br-device="mobile"] #salon-mobile .tn22-viewer .tn22-view-gallery[hidden]{
   display:none!important;
 }
+html[data-br-device="mobile"] #salon-mobile .tn22-viewer .tn22-view-gallery:active{
+  transform:translate(-50%,-50%) scale(.96)!important;
+  background:rgba(35,29,26,.9)!important;
+}
+
 html[data-br-device="mobile"] #salon-mobile .tn22-viewer .tn22-viewer-count{
-  position:absolute!important;right:0!important;top:50%!important;
+  position:absolute!important;right:8px!important;top:50%!important;
   transform:translateY(-50%)!important;
   margin:0!important;min-width:49px!important;
-  text-align:right!important;white-space:nowrap!important;
+  text-align:right!important;white-space:nowrap!important;font-size:10.5px!important;
 }
 /* On desktop the photo count belongs at the far right edge, just below the
    photo, while the portfolio gallery CTA is approximately 2cm wider. */
@@ -402,16 +412,23 @@ html[data-br-device="mobile"] #salon-mobile .tn22-viewer .tn22-viewer-count{
     left:auto!important;right:0!important;bottom:-55px!important;
     transform:none!important;
     box-sizing:border-box!important;
-    min-width:77px!important;height:44px!important;
+    min-width:77px!important;height:46px!important;
     display:flex!important;align-items:center!important;justify-content:center!important;
+    border:0!important;background:transparent!important;box-shadow:none!important;
+    -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+    color:rgba(255,255,255,.86)!important;font-size:12.1px!important;
   }
   html[data-br-device="desktop"] #salon-desktop-v1 #stdGallery[data-source="portfolio"] .std-view-gallery{
     display:inline-flex!important;
     align-items:center!important;justify-content:center!important;
     left:50%!important;bottom:-55px!important;
     transform:translateX(-50%)!important;
-    width:218px!important;min-width:218px!important;
-    height:44px!important;padding:0 21px!important;
+    width:240px!important;min-width:240px!important;
+    height:48px!important;padding:0 22px!important;
+    border-color:rgba(255,255,255,.30)!important;
+    background:rgba(255,255,255,.13)!important;
+    -webkit-backdrop-filter:blur(16px)!important;backdrop-filter:blur(16px)!important;
+    box-shadow:0 10px 30px rgba(0,0,0,.16)!important;font-size:12.1px!important;
   }
   html[data-br-device="desktop"] #salon-desktop-v1 #stdGallery .std-view-gallery[hidden]{
     display:none!important;

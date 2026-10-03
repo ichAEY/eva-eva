@@ -144,9 +144,15 @@ def compare(a: bytes, b: bytes, filename: str):
     # exact new pill/card geometry with verify_mobile_category_rails and keep
     # every non-service screenshot and all desktop thresholds unchanged.
     if filename.startswith("mobile-") and filename.endswith("-services"):
-        limit = 0.036
+        # Approved 03.10 changes: +10% category labels and a narrower price rail.
+        limit = 0.065
     elif filename.endswith("-services"):
-        limit = 0.03
+        # Approved 03.10 changes: larger tabs, 5% smaller titles, plain prices.
+        limit = 0.07
+    elif filename.startswith("mobile-") and filename.endswith("-gallery-category"):
+        limit = 0.035
+    elif filename.startswith("mobile-") and filename.endswith("-hero"):
+        limit = 0.02
     else:
         limit = 0.003
     if fraction > limit:
@@ -224,6 +230,7 @@ def verify_palette(browser, candidate: str):
             if mobile:
                 verify_mobile_category_rails(page, width)
             if not mobile:
+                verify_desktop_service_refinements(page)
                 verify_desktop_gallery_viewer(page)
                 # Hover animates over a few hundred milliseconds in the real UI.
                 # Wait for the destination colour, not the initial transition frame.
@@ -253,10 +260,10 @@ def verify_mobile_category_rails(page, width: int):
     })""")
     if len(category_metrics) != 4 or not any(x["name"] in ("Брови и ресницы", "Brows and Lashes") for x in category_metrics):
         raise AssertionError(f"{width}px: missing approved demo categories: {category_metrics}")
-    if any(abs(x["font"]-12.705) > .05 or abs(x["height"]-35) > .5
+    if any(abs(x["font"]-13.98) > .08 or abs(x["height"]-35) > .5
            or abs(x["padding"]-15) > .5 or x["whitespace"] != "nowrap"
            or x["flexShrink"] != "0" or x["clipped"] for x in category_metrics):
-        raise AssertionError(f"{width}px: categories differ from approved Esmeralda geometry with 10% larger font: {category_metrics}")
+        raise AssertionError(f"{width}px: categories differ from approved 13.98px geometry: {category_metrics}")
     rail_style = service_rail.evaluate("""rail => {
         const s=getComputedStyle(rail);
         return {display:s.display,gap:parseFloat(s.columnGap),overflow:s.overflowX,
@@ -298,16 +305,20 @@ def verify_mobile_category_rails(page, width: int):
     }""")
     if service_end["right"] > service_end["railRight"]+1:
         raise AssertionError(f"{width}px: last category cannot be fully scrolled: {service_end}")
-    # Short groups must also keep natural Esmeralda pill widths, not expand
-    # to occupy the whole screen just because only two categories remain.
+    # Exactly two categories are the sole exception: they share the available width.
     two = service_rail.evaluate("""rail => {
+        rail.classList.add('is-two');
         rail.innerHTML='<button class="tn31-cat">Ногти</button><button class="tn31-cat">Волосы</button>';
-        return {widths:[...rail.querySelectorAll('.tn31-cat')].map(b=>b.getBoundingClientRect().width),
-            overflow:rail.scrollWidth>rail.clientWidth+1,
-            available:rail.clientWidth};
+        const widths=[...rail.querySelectorAll('.tn31-cat')].map(b=>b.getBoundingClientRect().width);
+        const cs=getComputedStyle(rail);
+        return {widths,overflow:rail.scrollWidth>rail.clientWidth+1,
+            available:rail.clientWidth,gap:parseFloat(cs.columnGap),
+            left:parseFloat(cs.paddingLeft),right:parseFloat(cs.paddingRight)};
     }""")
-    if two["overflow"] or max(two["widths"]) > 120 or sum(two["widths"]) > two["available"]-70:
-        raise AssertionError(f"{width}px: two short categories were stretched or clipped: {two}")
+    if (two["overflow"] or abs(two["widths"][0]-two["widths"][1]) > 1.25
+        or abs(sum(two["widths"])+two["gap"]+two["left"]+two["right"]-two["available"]) > 2):
+        raise AssertionError(f"{width}px: exactly two categories do not fill the rail evenly: {two}")
+    service_rail.evaluate("rail => rail.classList.remove('is-two')")
 
     page.locator("#tn13Top .tn22-worklink").click()
     page.locator("#tn13Gallery.open").wait_for(timeout=8000)
@@ -323,12 +334,29 @@ def verify_mobile_category_rails(page, width: int):
             borderColor:getComputedStyle(rail).borderTopColor,
             radius:getComputedStyle(rail).borderTopLeftRadius};
     }""")
-    if appearance["wrap"] != appearance["base"] or appearance["shadow"] != "none":
+    if appearance["wrap"] not in (appearance["base"], "rgba(0, 0, 0, 0)") or appearance["shadow"] != "none":
         raise AssertionError(f"{width}px: gallery has a distinct category band: {appearance}")
-    if (appearance["font"] < 13.3 or appearance["nowrap"] != "nowrap"
+    if (appearance["font"] < 14.3 or appearance["nowrap"] != "nowrap"
         or appearance["border"] != "1px" or appearance["radius"] != "14px"
         or appearance["borderColor"] != "rgb(198, 190, 181)"):
         raise AssertionError(f"{width}px: Esmeralda gallery capsule missing: {appearance}")
+    hints = page.locator("#tn13Gallery .tn22-gallery-tabs-wrap").evaluate("""wrap => {
+        const rail=wrap.querySelector('.tn22-gallery-tabs');
+        const extra=document.createElement('button');
+        extra.className='tn22-gallery-tab';
+        extra.textContent='Очень длинная дополнительная категория';
+        rail.appendChild(extra);
+        rail.scrollLeft=0;
+        rail.dispatchEvent(new Event('scroll'));
+        const right=wrap.querySelector('.tn22-gallery-rail-hint.right');
+        const left=wrap.querySelector('.tn22-gallery-rail-hint.left');
+        return {rightVisible:right.classList.contains('visible'),
+            leftVisible:left.classList.contains('visible'),
+            overflow:rail.scrollWidth>rail.clientWidth+1};
+    }""")
+    if not hints["overflow"] or not hints["rightVisible"] or hints["leftVisible"]:
+        raise AssertionError(f"{width}px: gallery overflow direction hints are not synchronized: {hints}")
+
     gallery_last = gallery_tabs.evaluate("""rail => {
         rail.scrollLeft=rail.scrollWidth;
         const last=rail.lastElementChild.getBoundingClientRect();
@@ -389,6 +417,29 @@ def verify_mobile_category_rails(page, width: int):
         raise AssertionError(f"{width}px: master Reviews tab clips too early: {last_tab}")
     print(f"PASS mobile category rails: {width}px full labels, gallery uniformity, master last tab")
 
+
+
+def verify_desktop_service_refinements(page):
+    """Approved 03.10 desktop service deltas are present, not arbitrary pixel drift."""
+    tab_font = page.locator("#salonDesktopServices .mct-tab").first.evaluate(
+        "(el) => parseFloat(getComputedStyle(el).fontSize)"
+    )
+    title_font = page.locator("#salonDesktopServices .dct-service-card-title").first.evaluate(
+        "(el) => parseFloat(getComputedStyle(el).fontSize)"
+    )
+    if tab_font < 15.0:
+        raise AssertionError(f"Desktop service categories are still too small: {tab_font}px")
+    if title_font > 29.0:
+        raise AssertionError(f"Desktop service title did not receive the approved 5% reduction: {title_font}px")
+    price = page.locator("#salonDesktopServices .dct-service-card-meta>b.is-price").first
+    if price.count():
+        price_style = price.evaluate("""el => {
+            const s=getComputedStyle(el);
+            return {background:s.backgroundColor,border:s.borderTopWidth,color:s.color};
+        }""")
+        if price_style["background"] != "rgba(0, 0, 0, 0)" or price_style["border"] != "0px":
+            raise AssertionError(f"Desktop price still has a pill/frame: {price_style}")
+    print("PASS desktop services: larger categories, smaller titles, plain price treatment")
 
 
 def verify_desktop_gallery_viewer(page):

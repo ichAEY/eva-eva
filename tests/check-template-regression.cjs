@@ -81,6 +81,31 @@ function verifyTemplate(){
       // release. All still-reachable selectors remain byte-for-byte protected.
       if(selectorUsesRetiredHook(selector)||parents.some(atRuleUsesRetiredHook))return false;
       if(selector.includes(".is-compact"))return false;
+      // 03.10.2026 owner-approved deltas. Keep the exception surface limited
+      // to the exact UI families changed in the new salon contract.
+      if(name==="mobile.js"){
+        const approvedMobile=[
+          /^#salon-mobile #tn13Top \.tn22-(?:top|brand|brand img|title|title\.is-single-line|sub)$/,
+          /^#salon-mobile #tn13Gallery(?:\.(?:open|closing))?(?:$| \.tn22-gallery-(?:tabs-wrap|tabs|tab|tabs::-[\w-]+|rail-hint|rail-hint\.visible|rail-hint\.left|rail-hint\.right))/,
+          /^#salon-mobile \.tn22-(?:view-gallery|view-gallery:active|viewer-count|navbtn)$/,
+          /^#salon-mobile #tn13Services(?:$| \.tn31-(?:cats|cat|cats\.is-two|cats\.is-two \.tn31-cat|service-row|service-row\.tn31-service-demo|service-side|service-more-wrap))/,
+          /^#salon-mobile #tn13Team \.tn22-master-card\.is-placeholder$/,
+          /^#salon-mobile #tn13Visit \.tn22-visit-actions\.is-single$/
+        ];
+        if(approvedMobile.some(rx=>rx.test(selector)))return false;
+      }
+      if(name==="desktop.js"){
+        const approvedDesktop=[
+          /^#salon-desktop-v1 \.std-(?:header-brand-main|view-gallery|gallery-count)$/,
+          /^#salonDesktopServices \.mct-tab$/,
+          /^#salonDesktopServices \.dct-service-card:not\(\.has-variants\) \.dct-service-card-title$/,
+          /^#salonDesktopServices \.dct-service-card:not\(\.has-variants\) \.dct-service-side-rail$/,
+          /^#salonDesktopServices \.dct-service-(?:card-meta>b\.is-price|card-variant-meta>b\.is-price)$/,
+          /^#salonDesktopTeam \.std-master\.is-placeholder$/,
+          /^#salonDesktopContacts \.std-contact-actions\.is-single$/
+        ];
+        if(approvedDesktop.some(rx=>rx.test(selector)))return false;
+      }
       if(name==="mobile.js"&&/^#salon-mobile #tn13Services \.tn31-cat(?:s)?(?:::[\w-]+)?$/.test(selector))return false;
       if(property==="font-weight"&&selector.includes("#salonDesktopServices .dct-service-card:not(.has-variants) .dct-service-card-title"))return false;
       if(property==="font-weight"&&selector.includes("#salon-mobile #tn13Services .tn31-service-name"))return false;

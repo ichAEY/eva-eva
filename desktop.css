@@ -5129,3 +5129,53 @@ body[data-br-lang="en"] #salon-desktop-v1 .std-nav{width:min(46vw,690px)!importa
 #salonDesktopServices .dct-service-card:not(.has-variants) .dct-service-card-title{
   font-weight:600!important;
 }
+
+
+#salonDesktopContacts .std-contact-actions.is-single{grid-template-columns:1fr!important}
+
+/* 2026-10-03 — approved portfolio viewer and services refinements. */
+@media(min-width:1024px){
+  #salon-desktop-v1 .std-header-brand-main{
+    white-space:nowrap!important;
+  }
+  #salon-desktop-v1 .std-view-gallery{
+    height:46px!important;
+    padding:0 20px!important;
+    border-color:rgba(255,255,255,.30)!important;
+    background:rgba(255,255,255,.13)!important;
+    -webkit-backdrop-filter:blur(16px)!important;
+    backdrop-filter:blur(16px)!important;
+    box-shadow:0 10px 30px rgba(0,0,0,.16)!important;
+    font-size:12.1px!important;
+  }
+  #salon-desktop-v1 .std-gallery-count{
+    border-color:transparent!important;
+    background:transparent!important;
+    -webkit-backdrop-filter:none!important;
+    backdrop-filter:none!important;
+    box-shadow:none!important;
+    color:rgba(255,255,255,.86)!important;
+    font-size:12.1px!important;
+    letter-spacing:.04em!important;
+  }
+  #salonDesktopServices .mct-tab{
+    font-size:15.1px!important;
+  }
+  #salonDesktopServices .dct-service-card:not(.has-variants) .dct-service-card-title{
+    font-size:clamp(22.8px,1.71vw,28.5px)!important;
+  }
+  #salonDesktopServices .dct-service-card:not(.has-variants) .dct-service-side-rail{
+    right:28px!important;
+    max-width:calc(100% - 56px)!important;
+  }
+  #salonDesktopServices .dct-service-card-meta>b.is-price,#salonDesktopServices .dct-service-card-variant-meta>b.is-price{
+    border:0!important;
+    background:transparent!important;
+    box-shadow:none!important;
+    color:#f7f3f0!important;
+  }
+  #salonDesktopTeam .std-master.is-placeholder{
+    cursor:default!important;
+    pointer-events:none!important;
+  }
+}

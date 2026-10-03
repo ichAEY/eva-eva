@@ -17,7 +17,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       production: ${{ steps.site_mode.outputs.production }}
-      draft: ${{ steps.site_mode.outputs.draft }}
     steps:
       - name: Check out full repository history
         uses: actions/checkout@v4
@@ -33,15 +32,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Select draft or production checks
+      - name: Select template or production checks
         id: site_mode
         run: |
-          node - <<'NODE' >> "$GITHUB_OUTPUT"
-          const {loadSiteData}=require('./tests/validate-site-data.cjs');
-          const data=loadSiteData('site-data.js');
-          console.log('production='+String(data.mode==='production'));
-          console.log('draft='+String(data.mode==='template'&&data.services.length===0));
-          NODE
+          if node -e "const v=require('./tests/validate-site-data.cjs');process.exit(v.loadSiteData('site-data.js').mode==='production'?0:1)"; then
+            echo 'production=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'production=false' >> "$GITHUB_OUTPUT"
+          fi
       - name: Verify syntax, service contract, and unchanged effective CSS
         run: |
           node tests/check-template-regression.cjs
@@ -75,7 +73,7 @@ jobs:
           python -m pip install playwright==1.57.0 pillow
           python -m playwright install --with-deps chromium
       - name: Compare approved and cleaned UI at laptop and mobile sizes
-        if: needs.compare-to-approved-template.outputs.production != 'true' && needs.compare-to-approved-template.outputs.draft != 'true'
+        if: needs.compare-to-approved-template.outputs.production != 'true'
         run: |
           mkdir -p /tmp/salon-approved
           git archive 79ea1c63864627b634528c6c6f39c997226f85c4 | tar -x -C /tmp/salon-approved
@@ -130,7 +128,7 @@ jobs:
           python -m pip install playwright==1.57.0 pillow
           python -m playwright install --with-deps webkit
       - name: Compare approved UI in WebKit at laptop and phone sizes
-        if: needs.compare-to-approved-template.outputs.production != 'true' && needs.compare-to-approved-template.outputs.draft != 'true'
+        if: needs.compare-to-approved-template.outputs.production != 'true'
         run: |
           mkdir -p /tmp/salon-approved
           git archive 79ea1c63864627b634528c6c6f39c997226f85c4 | tar -x -C /tmp/salon-approved
