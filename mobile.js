@@ -138,21 +138,10 @@ const gallery=$('#tn13Gallery');let galleryCat='Салон';
 function renderGallery(){
  const items=GALLERY[galleryCat]||[];
  const categories=Object.keys(GALLERY);
- gallery.innerHTML=`<div class="tn22-gallery"><div class="tn22-gallery-top"><button class="tn22-gallery-back" type="button">←</button><div class="tn22-gallery-title"><strong>${["en","hy"].includes(document.body.dataset.brLang)?"Gallery":"Галерея"}</strong><span>SALON NAME</span></div><div></div></div><div class="tn22-gallery-tabs-wrap"><span class="tn22-gallery-rail-hint left" aria-hidden="true">‹</span><div class="tn22-gallery-tabs">${categories.map(c=>`<button class="tn22-gallery-tab${c===galleryCat?' active':''}" type="button" data-gcat="${c}">${c}</button>`).join('')}</div><span class="tn22-gallery-rail-hint right" aria-hidden="true">›</span></div><div class="tn22-gallery-grid${galleryCat==='Салон'?' salon':''}">${items.length?items.map((x,i)=>`<button class="tn22-gallery-tile" type="button" data-gi="${i}"><img loading="lazy" decoding="async" src="${x.src}" alt="${x.alt}"></button>`).join(''):'<div class="tn23-gallery-empty">Фотографии пока не добавлены</div>'}</div></div>`;
- const tabs=gallery.querySelector('.tn22-gallery-tabs');
- const leftHint=gallery.querySelector('.tn22-gallery-rail-hint.left');
- const rightHint=gallery.querySelector('.tn22-gallery-rail-hint.right');
- const syncHints=()=>{
-  const overflow=tabs&&tabs.scrollWidth>tabs.clientWidth+2;
-  const max=tabs?Math.max(0,tabs.scrollWidth-tabs.clientWidth):0;
-  leftHint?.classList.toggle('visible',!!overflow&&tabs.scrollLeft>4);
-  rightHint?.classList.toggle('visible',!!overflow&&tabs.scrollLeft<max-4);
- };
+ gallery.innerHTML=`<div class="tn22-gallery"><div class="tn22-gallery-top"><button class="tn22-gallery-back" type="button">←</button><div class="tn22-gallery-title"><strong>${["en","hy"].includes(document.body.dataset.brLang)?"Gallery":"Галерея"}</strong><span>SALON NAME</span></div><div></div></div><div class="tn22-gallery-tabs-wrap"><div class="tn22-gallery-tabs">${categories.map(c=>`<button class="tn22-gallery-tab${c===galleryCat?' active':''}" type="button" data-gcat="${c}">${c}</button>`).join('')}</div></div><div class="tn22-gallery-grid${galleryCat==='Салон'?' salon':''}">${items.length?items.map((x,i)=>`<button class="tn22-gallery-tile" type="button" data-gi="${i}"><img loading="lazy" decoding="async" src="${x.src}" alt="${x.alt}"></button>`).join(''):'<div class="tn23-gallery-empty">Фотографии пока не добавлены</div>'}</div></div>`;
  gallery.querySelector('.tn22-gallery-back').onclick=closeGallery;
  gallery.querySelectorAll('[data-gcat]').forEach(b=>b.onclick=()=>{galleryCat=b.dataset.gcat;renderGallery()});
  gallery.querySelectorAll('[data-gi]').forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();openViewer(items,+b.dataset.gi,'gallery')});
- tabs?.addEventListener('scroll',syncHints,{passive:true});
- requestAnimationFrame(syncHints);
 }
 let galleryCloseTimer=0;
 function setGalleryOrigin(origin){
