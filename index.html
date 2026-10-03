@@ -11,6 +11,7 @@
 <link rel="apple-touch-icon" href="favicon-source.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="preload" href="logo-placeholder.svg" as="image" type="image/svg+xml" fetchpriority="high">
 <link rel="preload" href="media-placeholder.svg" as="image" type="image/svg+xml" fetchpriority="high">
 <style>
@@ -44,7 +45,7 @@ html.br-booting #salon-mobile,html.br-booting #salon-desktop-v1{visibility:hidde
   const preload=document.createElement('link');
   preload.rel='preload';
   preload.as='style';
-  preload.href='mobile-overrides.css?v=salon-20261003-v4';
+  preload.href='mobile-overrides.css?v=salon-20261003-v5';
   const palettePreload=document.createElement('link');
   palettePreload.rel='preload';
   palettePreload.as='style';
@@ -69,7 +70,7 @@ html.br-booting #salon-mobile,html.br-booting #salon-desktop-v1{visibility:hidde
    const name=(site.salon?.name?.ru||site.salon?.name?.en||site.salon?.name||'TANEM');
    const logo=intro.querySelector('img');
    if(site.media?.logo){logo.src=site.media.logo;logo.alt=name;}
-   else if(logo){const text=document.createElement('strong');text.textContent=name;text.style.cssText='font:600 clamp(28px,7vw,64px)/1.1 Manrope,Arial,sans-serif;letter-spacing:-.04em;text-align:center;padding:24px';logo.replaceWith(text);}
+   else if(logo){const text=document.createElement('strong');text.textContent=name;text.style.cssText=desktop?'font:500 clamp(39.2px,9.8vw,89.6px)/.84 "Cormorant Garamond",Georgia,serif;letter-spacing:.105em;text-transform:uppercase;text-align:center;padding:24px 24px 24px calc(24px + .105em)':'font:500 clamp(39.2px,9.8vw,89.6px)/.92 "Cormorant Garamond",Georgia,serif;letter-spacing:.16em;text-transform:uppercase;text-align:center;padding:24px 24px 24px calc(24px + .16em)';logo.replaceWith(text);}
  }
  let closed=false,shown=false,readyTimer=0;
  function showApp(){
