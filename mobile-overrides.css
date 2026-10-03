@@ -467,7 +467,6 @@ html{background:linear-gradient(to bottom,#fafaf9 0%,#fafaf9 58%,#181818 100%)!i
   #salon-mobile #tn13Gallery .tn22-gallery-tabs-wrap{
     position:sticky!important;
     overflow:visible!important;
-    margin-top:26px!important;
     background:transparent!important;
     box-shadow:none!important;
     backdrop-filter:none!important;
@@ -477,7 +476,6 @@ html{background:linear-gradient(to bottom,#fafaf9 0%,#fafaf9 58%,#181818 100%)!i
     width:100%!important;
     display:flex!important;
     gap:0!important;
-    margin-top:0!important;
     overflow-x:auto!important;
     overflow-y:hidden!important;
     scrollbar-width:none!important;
@@ -495,31 +493,7 @@ html{background:linear-gradient(to bottom,#fafaf9 0%,#fafaf9 58%,#181818 100%)!i
     white-space:nowrap!important;
     font-size:14.36px!important;
   }
-  #salon-mobile #tn13Gallery .tn22-gallery-rail-hint{
-    position:absolute!important;
-    z-index:8!important;
-    top:50%!important;
-    transform:translateY(-50%)!important;
-    width:10px!important;
-    height:22px!important;
-    border-radius:0!important;
-    display:grid!important;
-    place-items:center!important;
-    pointer-events:none!important;
-    background:transparent!important;
-    border:0!important;
-    box-shadow:none!important;
-    color:#181818!important;
-    font:500 18px/1 Arial,sans-serif!important;
-    opacity:0!important;
-    transition:opacity .18s ease!important;
-  }
-  #salon-mobile #tn13Gallery .tn22-gallery-rail-hint.visible{
-    opacity:1!important;
-    transform:translateY(-50%)!important;
-  }
-  #salon-mobile #tn13Gallery .tn22-gallery-rail-hint.left{left:calc(-10px - .2cm)!important}
-  #salon-mobile #tn13Gallery .tn22-gallery-rail-hint.right{right:calc(-10px - .2cm)!important}
+
 
   #salon-mobile .tn22-view-gallery{
     height:44px!important;
