@@ -21,6 +21,11 @@ html,body{margin:0;min-height:100%;background:#FAF9F6;color:#252525;font-family:
 #brBootIntro img{display:block;width:min(50vw,220px);height:auto;max-height:38svh;object-fit:contain}
 html[data-br-device="desktop"] #brBootIntro{transition:opacity .40s cubic-bezier(.22,1,.36,1)}
 html[data-br-device="desktop"] #brBootIntro img{width:min(75vw,330px);max-height:48svh}
+#brBootIntro.has-client-logo img{width:min(70vw,308px);max-height:53.2svh}
+html[data-br-device="desktop"] #brBootIntro.has-client-logo img{width:min(90vw,462px);max-height:67.2svh}
+#brBootIntro .br-intro-name{display:block;max-width:calc(100vw - 48px);margin:0;text-align:center;text-transform:uppercase;overflow-wrap:anywhere}
+#brBootIntro .br-intro-name.is-mobile{font:500 clamp(50.96px,12.74vw,116.48px)/.92 "Cormorant Garamond",Georgia,serif;letter-spacing:.16em;padding:24px 24px 24px calc(24px + .16em)}
+#brBootIntro .br-intro-name.is-desktop{font:500 clamp(50.96px,12.74vw,116.48px)/.84 "Cormorant Garamond",Georgia,serif;letter-spacing:.105em;padding:24px 24px 24px calc(24px + .105em)}
 #brBootIntro.is-exiting{opacity:0;pointer-events:none}
 html.br-booting #salon-mobile,html.br-booting #salon-desktop-v1{visibility:hidden!important}
 #brLoadError{display:none;min-height:100svh;padding:32px;place-items:center;text-align:center}
@@ -45,7 +50,7 @@ html.br-booting #salon-mobile,html.br-booting #salon-desktop-v1{visibility:hidde
   const preload=document.createElement('link');
   preload.rel='preload';
   preload.as='style';
-  preload.href='mobile-overrides.css?v=salon-20261003-v5';
+  preload.href='mobile-overrides.css?v=salon-20261003-v6';
   const palettePreload=document.createElement('link');
   palettePreload.rel='preload';
   palettePreload.as='style';
@@ -69,8 +74,8 @@ html.br-booting #salon-mobile,html.br-booting #salon-desktop-v1{visibility:hidde
  if(site?.mode==='production'){
    const name=(site.salon?.name?.ru||site.salon?.name?.en||site.salon?.name||'TANEM');
    const logo=intro.querySelector('img');
-   if(site.media?.logo){logo.src=site.media.logo;logo.alt=name;}
-   else if(logo){const text=document.createElement('strong');text.textContent=name;text.style.cssText=desktop?'font:500 clamp(39.2px,9.8vw,89.6px)/.84 "Cormorant Garamond",Georgia,serif;letter-spacing:.105em;text-transform:uppercase;text-align:center;padding:24px 24px 24px calc(24px + .105em)':'font:500 clamp(39.2px,9.8vw,89.6px)/.92 "Cormorant Garamond",Georgia,serif;letter-spacing:.16em;text-transform:uppercase;text-align:center;padding:24px 24px 24px calc(24px + .16em)';logo.replaceWith(text);}
+   if(site.media?.logo){intro.classList.add('has-client-logo');logo.src=site.media.logo;logo.alt=name;}
+   else if(logo){const text=document.createElement('strong');text.className='br-intro-name '+(desktop?'is-desktop':'is-mobile');text.textContent=name;logo.replaceWith(text);}
  }
  let closed=false,shown=false,readyTimer=0;
  function showApp(){
@@ -104,7 +109,7 @@ html.br-booting #salon-mobile,html.br-booting #salon-desktop-v1{visibility:hidde
    }else ready();
  }
  const script=document.createElement('script');
- script.src=desktop?'desktop.js?v=salon-20261003-v1':'mobile.js?v=salon-20261003-v1';
+ script.src=desktop?'desktop.js?v=salon-20261003-v1':'mobile.js?v=salon-20261003-v2';
  script.async=false;script.onload=()=>{
    const runtime=document.createElement('script');
    runtime.src='site-runtime.js?v=salon-20261003-v5';
