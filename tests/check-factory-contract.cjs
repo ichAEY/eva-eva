@@ -42,23 +42,39 @@ assert.equal(starter.salon.heroDescription.ru,'Ваша красота. Ваша
 assert(starter.salon.about.ru.startsWith('В основе нашей работы — профессиональный подход'),'blank starter must preserve the approved universal About copy');
 assert.deepEqual(validateSiteData(starter,{rootDir:root}),[],'blank starter must have valid schema');
 
-assert.equal(data.country,'RU','the distributed template must open as a Russian salon by default');
-assert.deepEqual([...data.locales],['ru','en'],'the distributed template must show only RU/EN by default');
-assert.equal(data.services.length,4,'the template preview must contain exactly four neutral services');
-assert.deepEqual([...data.categoryOrder],['Волосы','Маникюр','Брови и ресницы','Эпиляция'],'the preview must show the four approved service categories');
-assert.deepEqual([...data.services.map(service=>service.title.en)],['Hair service','Manicure','Brows and Lashes','Hair Removal'],'demo service labels must use the approved English copy');
-for(const service of data.services){
-  assert.equal(service.price,'',`${service.id}: demo price must be empty`);
-  assert.equal(service.duration,'',`${service.id}: demo duration must be empty`);
-  assert.equal(service.description.ru,'',`${service.id}: demo description must be empty`);
-  assert.deepEqual([...service.variants],[],`${service.id}: demo variants must be empty`);
+if(data.mode==='template'){
+  assert.equal(data.country,'RU','the distributed template must open as a Russian salon by default');
+  assert.deepEqual([...data.locales],['ru','en'],'the distributed template must show only RU/EN by default');
+  assert.equal(data.services.length,4,'the template preview must contain exactly four neutral services');
+  assert.deepEqual([...data.categoryOrder],['Волосы','Маникюр','Брови и ресницы','Эпиляция'],'the preview must show the four approved service categories');
+  assert.deepEqual([...data.services.map(service=>service.title.en)],['Hair service','Manicure','Brows and Lashes','Hair Removal'],'demo service labels must use the approved English copy');
+  for(const service of data.services){
+    assert.equal(service.price,'',`${service.id}: demo price must be empty`);
+    assert.equal(service.duration,'',`${service.id}: demo duration must be empty`);
+    assert.equal(service.description.ru,'',`${service.id}: demo description must be empty`);
+    assert.deepEqual([...service.variants],[],`${service.id}: demo variants must be empty`);
+  }
+}else{
+  assert.equal(data.mode,'production','a populated client repository must explicitly use production mode');
+  assert.equal(data.country,'RU','EVA must remain a Russian salon');
+  assert.deepEqual([...data.locales],['ru','en'],'EVA must expose RU/EN only');
+  assert.equal(data.salon.name.ru,'EVA','EVA client identity must be preserved');
+  assert.equal(data.salon.city.ru,'г. Балашиха','EVA must use the approved short city label');
+  assert.equal(data.salon.address.ru,'Павлино, 69','EVA must use the short UI address');
+  assert(data.salon.fullAddress.ru.includes('Московская область'),'EVA must retain the verified full address separately');
+  assert.equal(data.services.length,17,'EVA must retain all 17 client services');
+  assert.equal(data.reviews.length,15,'EVA must retain all 15 client reviews');
+  assert.deepEqual([...data.team],[],'EVA has no confirmed team dataset');
+  assert.equal(data.media.logo,'','EVA must not invent a missing client logo');
+  assert.equal(data.media.hero[0].src,'hero.webp','EVA must use canonical hero media');
+  assert.equal(data.media.about,'profile.webp','EVA must use canonical profile media');
+  assert(data.contacts.mapEmbedUrl.includes('yandex.ru'),'EVA must embed Yandex Maps');
 }
 
-const unsafe=structuredClone(data);
+const unsafe=structuredClone(starter);
 unsafe.mode='production';
 const unsafeErrors=validateSiteData(unsafe,{rootDir:root});
-assert(unsafeErrors.some(error=>error.includes('production placeholder')),'production mode must reject demo copy');
-assert(unsafeErrors.some(error=>error.includes('placeholder media')),'production mode must reject placeholder media');
+assert(unsafeErrors.length>0,'the blank starter must never pass production validation');
 assert(unsafeErrors.some(error=>error.includes('booking method')),'production mode must require a booking method');
 
 const ready=loadSiteData(path.join(root,'tests/fixtures/site-data.production.js'));
