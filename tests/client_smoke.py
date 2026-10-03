@@ -108,10 +108,18 @@ def main():
     with sync_playwright() as playwright:
         browser = getattr(playwright, args.engine).launch(headless=True)
         try:
-            for case in [(1366, 900, False, "ru"), (1366, 900, False, "en"),
-                         (1366, 900, False, "hy"), (390, 844, True, "ru"),
-                         (390, 844, True, "en"), (390, 844, True, "hy"),
-                         (1180, 820, True, "ru")]:
+            probe_context = browser.new_context(viewport={"width": 390, "height": 844})
+            probe = probe_context.new_page()
+            probe.goto(HOST, wait_until="domcontentloaded", timeout=30000)
+            locales = probe.evaluate("window.TANEM_SITE_DATA && window.TANEM_SITE_DATA.locales")
+            probe_context.close()
+            assert locales and all(isinstance(locale, str) for locale in locales), "Production locales are missing"
+            cases = (
+                [(1366, 900, False, locale) for locale in locales]
+                + [(390, 844, True, locale) for locale in locales]
+                + [(1180, 820, True, locales[0])]
+            )
+            for case in cases:
                 check(browser, *case)
         finally:
             browser.close()
